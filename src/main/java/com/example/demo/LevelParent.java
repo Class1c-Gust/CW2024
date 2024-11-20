@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import javafx.animation.*;
@@ -11,7 +12,7 @@ import javafx.scene.image.*;
 import javafx.scene.input.*;
 import javafx.util.Duration;
 
-public abstract class LevelParent extends Observable {
+public abstract class LevelParent {
 
 	private static final double SCREEN_HEIGHT_ADJUSTMENT = 150;
 	private static final int MILLISECOND_DELAY = 50;
@@ -32,6 +33,7 @@ public abstract class LevelParent extends Observable {
 	
 	private int currentNumberOfEnemies;
 	private LevelView levelView;
+	private Consumer<String> levelchange;
 
 	public LevelParent(String backgroundImageName, double screenHeight, double screenWidth, int playerInitialHealth) {
 		this.root = new Group();
@@ -72,10 +74,16 @@ public abstract class LevelParent extends Observable {
 		background.requestFocus();
 		timeline.play();
 	}
-
+	public void levelChangeStatus(Consumer<String> callback) {
+		levelchange = callback;
+	}
 	public void goToNextLevel(String levelName) {
-		setChanged();
-		notifyObservers(levelName);
+		if (levelchange != null){
+			timeline.stop();
+			levelchange.accept(levelName);
+		}
+//		setChanged();
+//		notifyObservers(levelName);
 	}
 
 	private void updateScene() {
