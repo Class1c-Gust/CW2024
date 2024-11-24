@@ -1,6 +1,9 @@
 package com.example.demo;
 
+import javafx.geometry.BoundingBox;
 import javafx.scene.image.*;
+import javafx.geometry.Bounds;
+import javafx.scene.transform.*;
 
 public abstract class ActiveActor extends ImageView {
 	
@@ -23,6 +26,15 @@ public abstract class ActiveActor extends ImageView {
 
 	protected void moveVertically(double verticalMove) {
 		this.setTranslateY(getTranslateY() + verticalMove);
+	}
+	public Bounds getExactBounds(){
+		Bounds bounds = this.getBoundsInParent();
+		double reduction = bounds.getHeight() * 0.8;
+		double minx = bounds.getMinX();
+		double miny = bounds.getMinY() + reduction/2;
+		double width = bounds.getWidth();
+		double height = bounds.getHeight() - reduction;
+		return new BoundingBox(minx, miny, width, height);
 	}
 
 }
