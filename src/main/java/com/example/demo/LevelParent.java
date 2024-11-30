@@ -32,16 +32,22 @@ public abstract class LevelParent {
 	private final List<ActiveActorDestructible> enemyProjectiles;
 	
 	private int currentNumberOfEnemies;
-	private LevelView levelView;
+	private final LevelView levelView;
 	private Consumer<String> levelchange;
+	private final EnemyPlaneFactory enemyFactory;
+//	private final ProjectileFactory projectileFactory;
 
 	public LevelParent(String backgroundImageName, double screenHeight, double screenWidth, int playerInitialHealth) {
 		this.root = new Group();
 		this.scene = new Scene(root, screenWidth, screenHeight);
 		this.timeline = new Timeline();
-		this.user = new UserPlane(playerInitialHealth);
+		UserPlaneFactory userFactory = new UserPlaneFactory(playerInitialHealth);
+		this.user = userFactory.createUserPlane();
+		this.enemyFactory = new EnemyPlaneFactory();
+//		this.projectileFactory = new ProjectileFactory(backgroundImageName, screenHeight);
 		this.friendlyUnits = new ArrayList<>();
 		this.enemyUnits = new ArrayList<>();
+		
 		this.userProjectiles = new ArrayList<>();
 		this.enemyProjectiles = new ArrayList<>();
 
@@ -53,6 +59,14 @@ public abstract class LevelParent {
 		this.currentNumberOfEnemies = 0;
 		initializeTimeline();
 		friendlyUnits.add(user);
+	}
+
+	/**
+	 * Getter method
+	 * @return the enemyFactory instance
+	 */
+	public EnemyPlaneFactory getEnemyFactory() {
+		return enemyFactory;
 	}
 
 	protected abstract void initializeFriendlyUnits();
@@ -82,8 +96,6 @@ public abstract class LevelParent {
 			timeline.stop();
 			levelchange.accept(levelName);
 		}
-//		setChanged();
-//		notifyObservers(levelName);
 	}
 
 	private void updateScene() {

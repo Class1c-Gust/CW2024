@@ -19,12 +19,15 @@ public class EnemyPlane extends FighterPlane {
 		moveHorizontally(HORIZONTAL_VELOCITY);
 	}
 
+	/**
+	 * Modified - Integrated yse of the projectile factory to create projectile instances
+	 * @return - Projectile object
+	 */
 	@Override
 	public ActiveActorDestructible fireProjectile() {
 		if (Math.random() < FIRE_RATE) {
-			double projectileXPosition = getProjectileXPosition(PROJECTILE_X_POSITION_OFFSET);
-			double projectileYPostion = getProjectileYPosition(PROJECTILE_Y_POSITION_OFFSET);
-			return new EnemyProjectile(projectileXPosition, projectileYPostion);
+			ProjectileFactory projectileFactory = new ProjectileFactory(IMAGE_NAME, IMAGE_HEIGHT);
+			return projectileFactory.createEnemyProjectile(getProjectileXPosition(PROJECTILE_X_POSITION_OFFSET), getProjectileYPosition(PROJECTILE_Y_POSITION_OFFSET));
 		}
 		return null;
 	}
