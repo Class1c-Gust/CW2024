@@ -1,6 +1,8 @@
-package com.example.demo;
+package com.example.demo.Projectiles;
 
-public abstract class Projectile extends ActiveActorDestructible {
+import com.example.demo.GameObject;
+
+public abstract class Projectile extends GameObject {
 
 	public Projectile(String imageName, int imageHeight, double initialXPos, double initialYPos) {
 		super(imageName, imageHeight, initialXPos, initialYPos);

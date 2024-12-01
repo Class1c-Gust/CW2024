@@ -1,4 +1,7 @@
-package com.example.demo;
+package com.example.demo.Planes;
+
+import com.example.demo.GameObject;
+import com.example.demo.Projectiles.ProjectileFactory;
 
 public class UserPlane extends FighterPlane {
 
@@ -37,7 +40,7 @@ public class UserPlane extends FighterPlane {
 	}
 	
 	@Override
-	public ActiveActorDestructible fireProjectile() {
+	public GameObject fireProjectile() {
 		ProjectileFactory projectileFactory = new ProjectileFactory(IMAGE_NAME, IMAGE_HEIGHT);
 		return projectileFactory.createUserProjectile(PROJECTILE_X_POSITION, getProjectileYPosition(PROJECTILE_Y_POSITION_OFFSET));
 	}

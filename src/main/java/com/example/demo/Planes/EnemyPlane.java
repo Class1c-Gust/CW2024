@@ -1,4 +1,7 @@
-package com.example.demo;
+package com.example.demo.Planes;
+
+import com.example.demo.GameObject;
+import com.example.demo.Projectiles.ProjectileFactory;
 
 public class EnemyPlane extends FighterPlane {
 
@@ -24,7 +27,7 @@ public class EnemyPlane extends FighterPlane {
 	 * @return - Projectile object
 	 */
 	@Override
-	public ActiveActorDestructible fireProjectile() {
+	public GameObject fireProjectile() {
 		if (Math.random() < FIRE_RATE) {
 			ProjectileFactory projectileFactory = new ProjectileFactory(IMAGE_NAME, IMAGE_HEIGHT);
 			return projectileFactory.createEnemyProjectile(getProjectileXPosition(PROJECTILE_X_POSITION_OFFSET), getProjectileYPosition(PROJECTILE_Y_POSITION_OFFSET));

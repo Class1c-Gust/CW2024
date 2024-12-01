@@ -1,4 +1,8 @@
-package com.example.demo;
+package com.example.demo.Planes;
+
+import com.example.demo.GameObject;
+import com.example.demo.Levels.LevelViewLevelTwo;
+import com.example.demo.Projectiles.BossProjectile;
 
 import java.util.*;
 
@@ -12,7 +16,7 @@ public class Boss extends FighterPlane {
 	private static final double BOSS_SHIELD_PROBABILITY = .002;
 	private static final int IMAGE_HEIGHT = 300;
 	private static final int VERTICAL_VELOCITY = 8;
-	private static final int HEALTH = 100;
+	private static final int MAX_HEALTH = 100;
 	private static final int MOVE_FREQUENCY_PER_CYCLE = 5;
 	private static final int ZERO = 0;
 	private static final int MAX_FRAMES_WITH_SAME_MOVE = 10;
@@ -24,17 +28,19 @@ public class Boss extends FighterPlane {
 	private int consecutiveMovesInSameDirection;
 	private int indexOfCurrentMove;
 	private int framesWithShieldActivated;
+	private int currentHealth;
 	private double currentPosition;
-	private LevelViewLevelTwo levelview;
+	private final LevelViewLevelTwo levelview;
 
 	public Boss(LevelViewLevelTwo p_levelview) {
-		super(IMAGE_NAME, IMAGE_HEIGHT, INITIAL_X_POSITION, INITIAL_Y_POSITION, HEALTH);
+		super(IMAGE_NAME, IMAGE_HEIGHT, INITIAL_X_POSITION, INITIAL_Y_POSITION, MAX_HEALTH);
 		this.levelview = p_levelview;
 		movePattern = new ArrayList<>();
 		consecutiveMovesInSameDirection = 0;
 		indexOfCurrentMove = 0;
 		framesWithShieldActivated = 0;
 		isShielded = false;
+		this.currentHealth = MAX_HEALTH;
 		initializeMovePattern();
 	}
 
@@ -56,13 +62,14 @@ public class Boss extends FighterPlane {
 	}
 
 	@Override
-	public ActiveActorDestructible fireProjectile() {
+	public GameObject fireProjectile() {
 		return bossFiresInCurrentFrame() ? new BossProjectile(getProjectileInitialPosition()) : null;
 	}
 	
 	@Override
 	public void takeDamage() {
 		if (!isShielded) {
+			currentHealth--;
 			super.takeDamage();
 		}
 	}
@@ -123,5 +130,9 @@ public class Boss extends FighterPlane {
 		levelview.hideShield();
 		framesWithShieldActivated = 0;
 	}
+	public int getHealth(){
+		return currentHealth;
+	}
+	public int getMaxHealth(){return MAX_HEALTH;}
 
 }
