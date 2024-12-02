@@ -38,11 +38,21 @@ public class LevelView {
 	public void showGameOverImage() {
 		root.getChildren().add(gameOverImage);
 	}
-	
-	public void removeHearts(int heartsRemaining) {
+
+	/**
+	 * Updates the current heart display by either adding or removing a heart
+	 * @param currentHealth the current health of the user plane
+	 */
+	public void updateHearts(int currentHealth) {
 		int currentNumberOfHearts = heartDisplay.getContainer().getChildren().size();
-		for (int i = 0; i < currentNumberOfHearts - heartsRemaining; i++) {
-			heartDisplay.removeHeart();
+		int difference = currentNumberOfHearts - currentHealth;
+		for (int i = 0; i < Math.abs(difference); i++) {
+			if (difference > 0){
+				heartDisplay.removeHeart();
+			}
+			else {
+				heartDisplay.addHeart();
+			}
 		}
 	}
 

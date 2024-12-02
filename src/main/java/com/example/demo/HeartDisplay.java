@@ -32,17 +32,30 @@ public class HeartDisplay {
 	
 	private void initializeHearts() {
 		for (int i = 0; i < numberOfHeartsToDisplay; i++) {
-			ImageView heart = new ImageView(new Image(Objects.requireNonNull(getClass().getResource(HEART_IMAGE_NAME)).toExternalForm()));
-
-			heart.setFitHeight(HEART_HEIGHT);
-			heart.setPreserveRatio(true);
-			container.getChildren().add(heart);
+			createHeart();
 		}
+	}
+
+	/**
+	 * Separate function to create the heart instance to prevent duplicate code
+	 */
+	private void createHeart(){
+		ImageView heart = new ImageView(new Image(Objects.requireNonNull(getClass().getResource(HEART_IMAGE_NAME)).toExternalForm()));
+		heart.setFitHeight(HEART_HEIGHT);
+		heart.setPreserveRatio(true);
+		container.getChildren().add(heart);
 	}
 	
 	public void removeHeart() {
 		if (!container.getChildren().isEmpty())
 			container.getChildren().remove(INDEX_OF_FIRST_ITEM);
+	}
+
+	/**
+	 * Publicly calls the createHeart() function to create the heart object
+	 */
+	public void addHeart(){
+		createHeart();
 	}
 	
 	public HBox getContainer() {

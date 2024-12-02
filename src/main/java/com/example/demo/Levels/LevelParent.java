@@ -7,6 +7,7 @@ import com.example.demo.Planes.EnemyPlaneFactory;
 import com.example.demo.Planes.FighterPlane;
 import com.example.demo.Planes.UserPlane;
 import com.example.demo.Planes.UserPlaneFactory;
+import com.example.demo.Projectiles.Heart;
 import javafx.animation.*;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -32,14 +33,21 @@ public abstract class LevelParent {
 	private final List<GameObject> enemyUnits;
 	private final List<GameObject> userProjectiles;
 	private final List<GameObject> enemyProjectiles;
+	private final List<GameObject> hearts;
 	
 	private int currentNumberOfEnemies;
+	private int initalPlayerHealth;
+	private double heartSpawnProbability = .002;
+	private int heartSpawnLimit;
+	private int heartsSpawned;
 	private final LevelView levelView;
 	private Consumer<String> levelchange;
 	private final EnemyPlaneFactory enemyFactory;
+
 //	private final ProjectileFactory projectileFactory;
 
-	public LevelParent(String backgroundImageName, double screenHeight, double screenWidth, int playerInitialHealth) {
+	public LevelParent(String backgroundImageName, double screenHeight, double screenWidth, int playerInitialHealth, int heartSpawnLimit,
+					   double heartSpawnProbability) {
 		this.root = new Group();
 		this.scene = new Scene(root, screenWidth, screenHeight);
 		this.timeline = new Timeline();
@@ -49,15 +57,18 @@ public abstract class LevelParent {
 //		this.projectileFactory = new ProjectileFactory(backgroundImageName, screenHeight);
 		this.friendlyUnits = new ArrayList<>();
 		this.enemyUnits = new ArrayList<>();
-		
+		this.hearts = new ArrayList<>();
 		this.userProjectiles = new ArrayList<>();
 		this.enemyProjectiles = new ArrayList<>();
-
 		this.background = new ImageView(new Image(Objects.requireNonNull(getClass().getResource(backgroundImageName)).toExternalForm()));
 		this.screenHeight = screenHeight;
 		this.screenWidth = screenWidth;
 		this.enemyMaximumYPosition = screenHeight - SCREEN_HEIGHT_ADJUSTMENT;
 		this.levelView = instantiateLevelView();
+		this.initalPlayerHealth = playerInitialHealth;
+		this.heartSpawnLimit = heartSpawnLimit;
+		this.heartSpawnProbability = heartSpawnProbability;
+		this.heartsSpawned = 0;
 		this.currentNumberOfEnemies = 0;
 		initializeTimeline();
 		friendlyUnits.add(user);
@@ -101,6 +112,7 @@ public abstract class LevelParent {
 	}
 
 	protected void updateScene() {
+		spawnHeart();
 		spawnEnemyUnits();
 		updateActors();
 		generateEnemyFire();
@@ -109,6 +121,7 @@ public abstract class LevelParent {
 		handleUserProjectileCollisions();
 		handleEnemyProjectileCollisions();
 		handlePlaneCollisions();
+		handleHeartCollisions();
 		removeAllDestroyedActors();
 		updateKillCount();
 		updateLevelView();
@@ -144,6 +157,29 @@ public abstract class LevelParent {
 		userProjectiles.add(projectile);
 	}
 
+	/**
+	 * Creates a new heart instance and adds it to the scene
+	 */
+	public void addHeart(){
+		Heart heart = new Heart((40 + ((Math.random() * this.screenHeight-100))));
+		root.getChildren().add(heart);
+		hearts.add(heart);
+	}
+	/**
+	 * Spawns a heart if below the set spawn limit and the players health has decreased
+	 * Probability of heart spawning, spawn limit can be changed depending on level
+	 */
+	protected void spawnHeart(){
+		if (heartsSpawned < heartSpawnLimit){
+			if (getUser().getHealth() < initalPlayerHealth) {
+				if (Math.random() < heartSpawnProbability) {
+					addHeart();
+					heartsSpawned++;
+				}
+			}
+		}
+	}
+
 	private void generateEnemyFire() {
 		enemyUnits.forEach(enemy -> spawnEnemyProjectile(((FighterPlane) enemy).fireProjectile()));
 	}
@@ -160,6 +196,7 @@ public abstract class LevelParent {
 		enemyUnits.forEach(GameObject::updateActor);
 		userProjectiles.forEach(GameObject::updateActor);
 		enemyProjectiles.forEach(GameObject::updateActor);
+		hearts.forEach(GameObject::updateActor);
 	}
 
 	private void removeAllDestroyedActors() {
@@ -167,6 +204,7 @@ public abstract class LevelParent {
 		removeDestroyedActors(enemyUnits);
 		removeDestroyedActors(userProjectiles);
 		removeDestroyedActors(enemyProjectiles);
+		removeDestroyedActors(hearts);
 	}
 
 	private void removeDestroyedActors(List<GameObject> actors) {
@@ -182,6 +220,19 @@ public abstract class LevelParent {
 
 	private void handleUserProjectileCollisions() {
 		handleCollisions(userProjectiles, enemyUnits);
+	}
+
+	/**
+	 * Handles heart collisions with user plane, adding health
+	 */
+	public void handleHeartCollisions(){
+		for (GameObject heart : hearts){
+			if (heart.getExactBounds().intersects(user.getExactBounds())){
+				heart.takeDamage();
+				user.addHealth();
+			}
+
+		}
 	}
 
 	private void handleEnemyProjectileCollisions() {
@@ -210,7 +261,7 @@ public abstract class LevelParent {
 	}
 
 	private void updateLevelView() {
-		levelView.removeHearts(user.getHealth());
+		levelView.updateHearts(user.getHealth());
 	}
 
 	private void updateKillCount() {

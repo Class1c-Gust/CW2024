@@ -33,8 +33,12 @@ public abstract class FighterPlane extends GameObject {
 		return health == 0;
 	}
 
+	/**
+	 * Getters and setters for the health of the fighter plane
+	 */
 	public int getHealth() {
 		return health;
 	}
+	public void addHealth(){this.health+=1;}
 		
 }
