@@ -17,18 +17,24 @@ public class EnemyPlane extends FighterPlane {
 		super(IMAGE_NAME, IMAGE_HEIGHT, initialXPos, initialYPos, INITIAL_HEALTH);
 	}
 
+	/**
+	 * Modified so position is not updated when the plane is disabled
+	 */
 	@Override
 	public void updatePosition() {
-		moveHorizontally(HORIZONTAL_VELOCITY);
+		if (!getDisabledStatus()) {
+			moveHorizontally(HORIZONTAL_VELOCITY);
+		}
 	}
 
 	/**
 	 * Modified - Integrated yse of the projectile factory to create projectile instances
+	 * Projectile isn't fired when the plane is disabled
 	 * @return - Projectile object
 	 */
 	@Override
 	public GameObject fireProjectile() {
-		if (Math.random() < FIRE_RATE) {
+		if (Math.random() < FIRE_RATE && !getDisabledStatus()) {
 			ProjectileFactory projectileFactory = new ProjectileFactory(IMAGE_NAME, IMAGE_HEIGHT);
 			return projectileFactory.createEnemyProjectile(getProjectileXPosition(PROJECTILE_X_POSITION_OFFSET), getProjectileYPosition(PROJECTILE_Y_POSITION_OFFSET));
 		}

@@ -7,7 +7,10 @@ import com.example.demo.Planes.EnemyPlaneFactory;
 import com.example.demo.Planes.FighterPlane;
 import com.example.demo.Planes.UserPlane;
 import com.example.demo.Planes.UserPlaneFactory;
-import com.example.demo.Projectiles.Heart;
+import com.example.demo.Powerups.Freeze;
+import com.example.demo.Powerups.Powerup;
+import com.example.demo.Powerups.Heart;
+import com.example.demo.Powerups.Multishot;
 import javafx.animation.*;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -33,21 +36,23 @@ public abstract class LevelParent {
 	private final List<GameObject> enemyUnits;
 	private final List<GameObject> userProjectiles;
 	private final List<GameObject> enemyProjectiles;
-	private final List<GameObject> hearts;
+	private final List<Powerup> powerups;
 	
 	private int currentNumberOfEnemies;
-	private int initalPlayerHealth;
-	private double heartSpawnProbability = .002;
-	private int heartSpawnLimit;
-	private int heartsSpawned;
+	private final int initialPlayerHealth;
+	private final double heartSpawnProbability;
+	private final double freezeSpawnProbability;
+	private final double multishotSpawnProbability;
+	private final int powerupLimit;
+	private final int weaponSpawnLimit;
 	private final LevelView levelView;
 	private Consumer<String> levelchange;
 	private final EnemyPlaneFactory enemyFactory;
 
 //	private final ProjectileFactory projectileFactory;
 
-	public LevelParent(String backgroundImageName, double screenHeight, double screenWidth, int playerInitialHealth, int heartSpawnLimit,
-					   double heartSpawnProbability) {
+	public LevelParent(String backgroundImageName, double screenHeight, double screenWidth, int playerInitialHealth, int powerupLimit,
+					   double heartSpawnProbability, double freezeSpawnProbability) {
 		this.root = new Group();
 		this.scene = new Scene(root, screenWidth, screenHeight);
 		this.timeline = new Timeline();
@@ -57,7 +62,7 @@ public abstract class LevelParent {
 //		this.projectileFactory = new ProjectileFactory(backgroundImageName, screenHeight);
 		this.friendlyUnits = new ArrayList<>();
 		this.enemyUnits = new ArrayList<>();
-		this.hearts = new ArrayList<>();
+		this.powerups = new ArrayList<>();
 		this.userProjectiles = new ArrayList<>();
 		this.enemyProjectiles = new ArrayList<>();
 		this.background = new ImageView(new Image(Objects.requireNonNull(getClass().getResource(backgroundImageName)).toExternalForm()));
@@ -65,11 +70,13 @@ public abstract class LevelParent {
 		this.screenWidth = screenWidth;
 		this.enemyMaximumYPosition = screenHeight - SCREEN_HEIGHT_ADJUSTMENT;
 		this.levelView = instantiateLevelView();
-		this.initalPlayerHealth = playerInitialHealth;
-		this.heartSpawnLimit = heartSpawnLimit;
+		this.initialPlayerHealth = playerInitialHealth;
+		this.powerupLimit = powerupLimit;
 		this.heartSpawnProbability = heartSpawnProbability;
-		this.heartsSpawned = 0;
 		this.currentNumberOfEnemies = 0;
+		this.freezeSpawnProbability = freezeSpawnProbability;
+		this.multishotSpawnProbability = .001;
+		this.weaponSpawnLimit = 3;
 		initializeTimeline();
 		friendlyUnits.add(user);
 	}
@@ -112,7 +119,9 @@ public abstract class LevelParent {
 	}
 
 	protected void updateScene() {
-		spawnHeart();
+		updateHearts();
+		updateMultishot();
+		updateFreezeSpawn();
 		spawnEnemyUnits();
 		updateActors();
 		generateEnemyFire();
@@ -120,8 +129,8 @@ public abstract class LevelParent {
 		handleEnemyPenetration();
 		handleUserProjectileCollisions();
 		handleEnemyProjectileCollisions();
+		handlePowerupCollisions();
 		handlePlaneCollisions();
-		handleHeartCollisions();
 		removeAllDestroyedActors();
 		updateKillCount();
 		updateLevelView();
@@ -151,34 +160,78 @@ public abstract class LevelParent {
 		root.getChildren().add(background);
 	}
 
-	private void fireProjectile() {
-		GameObject projectile = user.fireProjectile();
-		root.getChildren().add(projectile);
-		userProjectiles.add(projectile);
+	/**
+	 * Fires multiple projectiles for multishot powerup
+	 * @param projectiles List of projectiles to be fired
+	 */
+	private void fireProjectiles(List<GameObject> projectiles) {
+		if (projectiles == null || projectiles.isEmpty()) return;
+
+		for (GameObject projectile : projectiles) {
+			root.getChildren().add(projectile);
+			userProjectiles.add(projectile);
+		}
 	}
 
 	/**
-	 * Creates a new heart instance and adds it to the scene
+	 * Modified to fire multishot if enabled
 	 */
-	public void addHeart(){
-		Heart heart = new Heart((40 + ((Math.random() * this.screenHeight-100))));
-		root.getChildren().add(heart);
-		hearts.add(heart);
+	private void fireProjectile() {
+		if (user.isMultishotEnabled()){
+			List<GameObject> projectiles = user.fireMultiShot();
+			fireProjectiles(projectiles);
+		}
+		else {
+			GameObject projectile = user.fireProjectile();
+			if (projectile != null) {
+				root.getChildren().add(projectile);
+				userProjectiles.add(projectile);
+			}
+		}
 	}
 	/**
 	 * Spawns a heart if below the set spawn limit and the players health has decreased
 	 * Probability of heart spawning, spawn limit can be changed depending on level
 	 */
-	protected void spawnHeart(){
-		if (heartsSpawned < heartSpawnLimit){
-			if (getUser().getHealth() < initalPlayerHealth) {
+	private void updateHearts(){
+		if (powerups.size() < powerupLimit){
+			if (getUser().getHealth() < initialPlayerHealth) {
 				if (Math.random() < heartSpawnProbability) {
-					addHeart();
-					heartsSpawned++;
+					Heart heart = new Heart(randomYposition());
+					root.getChildren().add(heart);
+					powerups.add(heart);
+//					heartsSpawned++;
 				}
 			}
 		}
 	}
+
+	/**
+	 * Creates multishot powerup if probability is met and adds it to the powerup list
+	 */
+	private void updateMultishot(){
+		if (powerups.size() < powerupLimit){
+			if (Math.random() < multishotSpawnProbability){
+				Multishot multiShotIcon = new Multishot(randomYposition());
+				root.getChildren().add(multiShotIcon);
+				powerups.add(multiShotIcon);
+			}
+		}
+	}
+
+	/**
+	 * Creates freeze powerup if probability is met and adds it to the powerup list
+	 */
+	private void updateFreezeSpawn(){
+		if (Math.random() < freezeSpawnProbability && powerups.size() < weaponSpawnLimit){
+			Freeze freeze = new Freeze(randomYposition());
+			root.getChildren().add(freeze);
+			powerups.add(freeze);
+			}
+
+	}
+
+	private double randomYposition(){return (60 + ((Math.random() * this.screenHeight-100)));}
 
 	private void generateEnemyFire() {
 		enemyUnits.forEach(enemy -> spawnEnemyProjectile(((FighterPlane) enemy).fireProjectile()));
@@ -196,7 +249,7 @@ public abstract class LevelParent {
 		enemyUnits.forEach(GameObject::updateActor);
 		userProjectiles.forEach(GameObject::updateActor);
 		enemyProjectiles.forEach(GameObject::updateActor);
-		hearts.forEach(GameObject::updateActor);
+		powerups.forEach(GameObject:: updateActor); // Update powerups
 	}
 
 	private void removeAllDestroyedActors() {
@@ -204,7 +257,7 @@ public abstract class LevelParent {
 		removeDestroyedActors(enemyUnits);
 		removeDestroyedActors(userProjectiles);
 		removeDestroyedActors(enemyProjectiles);
-		removeDestroyedActors(hearts);
+		removeDestroyedPowerups(powerups); // Destroy powerup objects
 	}
 
 	private void removeDestroyedActors(List<GameObject> actors) {
@@ -212,6 +265,18 @@ public abstract class LevelParent {
 				.toList();
 		root.getChildren().removeAll(destroyedActors);
 		actors.removeAll(destroyedActors);
+	}
+
+	/**
+	 * Remove destroyed powerups from the screen, without removing them from the list of powerups
+	 * This is so the powerup is still activated
+	 * @param actors List of powerups
+	 */
+	private void removeDestroyedPowerups(List<Powerup> actors){
+		List<Powerup> destroyedActors = actors.stream().filter(Powerup::isDestroyed)
+				.toList();
+		root.getChildren().removeAll(destroyedActors);
+//		actors.removeAll(destroyedActors);
 	}
 
 	private void handlePlaneCollisions() {
@@ -223,15 +288,20 @@ public abstract class LevelParent {
 	}
 
 	/**
-	 * Handles heart collisions with user plane, adding health
+	 * Handles powerup icon collisions with user plane
 	 */
-	public void handleHeartCollisions(){
-		for (GameObject heart : hearts){
-			if (heart.getExactBounds().intersects(user.getExactBounds())){
-				heart.takeDamage();
-				user.addHealth();
+	public void handlePowerupCollisions(){
+		for (Powerup powerup : powerups){
+			if (powerup.getExactBounds().intersects(user.getExactBounds())){
+				powerup.activatePower(root, user);
 			}
-
+			else{
+				for (GameObject projectile : userProjectiles){
+					if (powerup.getExactBounds().intersects(projectile.getExactBounds()) && powerup.isShootable()) {
+						powerup.activatePower(root, user);
+					}
+				}
+			}
 		}
 	}
 

@@ -5,10 +5,12 @@ import com.example.demo.GameObject;
 public abstract class FighterPlane extends GameObject {
 
 	private int health;
+	private boolean isDisabled;
 
 	public FighterPlane(String imageName, int imageHeight, double initialXPos, double initialYPos, int health) {
 		super(imageName, imageHeight, initialXPos, initialYPos);
 		this.health = health;
+		this.isDisabled = false;
 	}
 
 	public abstract GameObject fireProjectile();
@@ -40,5 +42,17 @@ public abstract class FighterPlane extends GameObject {
 		return health;
 	}
 	public void addHealth(){this.health+=1;}
+
+	/**
+	 * Getters and Setters for isDisabled variable
+	 * @param disabledStatus true or false whether plane is disabled or not
+	 */
+	public void setDisabledStatus(boolean disabledStatus){
+		this.isDisabled = disabledStatus;
+	}
+
+	public boolean getDisabledStatus(){
+		return this.isDisabled;
+	}
 		
 }

@@ -11,10 +11,12 @@ public class LevelOne extends LevelParent {
 	private static final double ENEMY_SPAWN_PROBABILITY = .20;
 	private static final int PLAYER_INITIAL_HEALTH = 5;
 	private static final double HEART_SPAWN_PROBABILITY = .002;
+	private static final double FREEZE_SPAWN_PROBABILITY = .02;
 	private static final int HEART_SPAWN_LIMIT = 2;
 
 	public LevelOne(double screenHeight, double screenWidth) {
-		super(BACKGROUND_IMAGE_NAME, screenHeight, screenWidth, PLAYER_INITIAL_HEALTH, HEART_SPAWN_LIMIT, HEART_SPAWN_PROBABILITY);
+		super(BACKGROUND_IMAGE_NAME, screenHeight, screenWidth, PLAYER_INITIAL_HEALTH, HEART_SPAWN_LIMIT, HEART_SPAWN_PROBABILITY,
+				FREEZE_SPAWN_PROBABILITY);
 	}
 
 	@Override
