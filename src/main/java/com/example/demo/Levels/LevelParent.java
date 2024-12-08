@@ -56,6 +56,7 @@ public abstract class LevelParent {
 	private final LevelView levelView;
 	private Consumer<String> levelchange;
 	private final EnemyPlaneFactory enemyFactory;
+	private final CollisionManager collisionManager;
 
 //	private final ProjectileFactory projectileFactory;
 
@@ -87,6 +88,8 @@ public abstract class LevelParent {
 		this.weaponSpawnLimit = 3;
 		initializeTimeline();
 		friendlyUnits.add(user);
+		this.collisionManager = new CollisionManager(root, user, friendlyUnits, enemyUnits,
+				userProjectiles, enemyProjectiles, powerups);
 	}
 
 	/**
@@ -171,11 +174,7 @@ public abstract class LevelParent {
 		updateActors();
 		generateEnemyFire();
 		updateNumberOfEnemies();
-		handleEnemyPenetration();
-		handleUserProjectileCollisions();
-		handleEnemyProjectileCollisions();
-		handlePowerupCollisions();
-		handlePlaneCollisions();
+		collisionManager.handleGameCollisions();
 		removeAllDestroyedActors();
 		updateKillCount();
 		updateLevelView();
@@ -327,58 +326,10 @@ public abstract class LevelParent {
 //		actors.removeAll(destroyedActors);
 	}
 
-	private void handlePlaneCollisions() {
-		handleCollisions(friendlyUnits, enemyUnits);
-	}
-
-	private void handleUserProjectileCollisions() {
-		handleCollisions(userProjectiles, enemyUnits);
-	}
-
 	/**
 	 * Handles powerup icon collisions with user plane
 	 */
-	public void handlePowerupCollisions(){
-		for (Powerup powerup : powerups){
-			if (powerup.getExactBounds().intersects(user.getExactBounds())){
-				powerup.activatePower(root, user);
-				powerup.destroy(); // destroy powerup icon after activated
-			}
-			else{
-				for (GameObject projectile : userProjectiles){
-					if (powerup.getExactBounds().intersects(projectile.getExactBounds()) && powerup.isShootable()) {
-						powerup.activatePower(root, user);
-						powerup.destroy();
-					}
-				}
-			}
-		}
-	}
 
-	private void handleEnemyProjectileCollisions() {
-		handleCollisions(enemyProjectiles, friendlyUnits);
-	}
-
-	private void handleCollisions(List<GameObject> actors1,
-			List<GameObject> actors2) {
-		for (GameObject actor : actors2) {
-			for (GameObject otherActor : actors1) {
-				if (actor.getExactBounds().intersects(otherActor.getExactBounds())) {
-					actor.takeDamage();
-					otherActor.takeDamage();
-				}
-			}
-		}
-	}
-
-	private void handleEnemyPenetration() {
-		for (GameObject enemy : enemyUnits) {
-			if (enemyHasPenetratedDefenses(enemy)) {
-				user.takeDamage();
-				enemy.destroy();
-			}
-		}
-	}
 
 	private void updateLevelView() {
 		levelView.updateHearts(user.getHealth());
@@ -390,9 +341,6 @@ public abstract class LevelParent {
 		}
 	}
 
-	private boolean enemyHasPenetratedDefenses(GameObject enemy) {
-		return Math.abs(enemy.getTranslateX()) > screenWidth;
-	}
 
 	protected void winGame() {
 		timeline.stop();

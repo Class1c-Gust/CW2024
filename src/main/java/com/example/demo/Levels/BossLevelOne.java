@@ -2,7 +2,10 @@ package com.example.demo.Levels;
 
 import com.example.demo.Planes.Boss;
 
-public class BossOne extends LevelParent {
+/**
+ * Class representing the first boss level
+ */
+public class BossLevelOne extends LevelParent {
 
 	private static final String BACKGROUND_IMAGE_NAME = "/com/example/demo/images/background2.jpg";
 	private static final int PLAYER_INITIAL_HEALTH = 5;
@@ -12,7 +15,7 @@ public class BossOne extends LevelParent {
 	private final Boss boss;
 	private LevelViewBossOne levelView;
 
-	public BossOne(double screenHeight, double screenWidth) {
+	public BossLevelOne(double screenHeight, double screenWidth) {
 		super(BACKGROUND_IMAGE_NAME, screenHeight, screenWidth, PLAYER_INITIAL_HEALTH, HEART_SPAWN_LIMIT, HEART_SPAWN_PROBABILITY, FREEZE_SPAWN_PROBABILITY);
 		boss = new Boss(levelView);
 	}

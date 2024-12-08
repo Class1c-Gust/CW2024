@@ -8,7 +8,7 @@ import com.example.demo.GameObject;
 public class LevelTwo extends LevelParent {
 
     private static final String BACKGROUND_IMAGE_NAME = "/com/example/demo/images/sunset.jpg";
-    private static final String NEXT_LEVEL = "com.example.demo.Levels.BossOne";
+    private static final String NEXT_LEVEL = "com.example.demo.Levels.BossLevelOne";
     private static final int TOTAL_ENEMIES = 6;
     private static final int KILLS_TO_ADVANCE = 20;
     private static final double ENEMY_SPAWN_PROBABILITY = .23;
