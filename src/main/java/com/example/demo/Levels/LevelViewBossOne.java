@@ -7,7 +7,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public class LevelViewLevelTwo extends LevelView {
+public class LevelViewBossOne extends LevelView {
 
 	private static final int SHIELD_X_POSITION = 1150;
 	private static final int SHIELD_Y_POSITION = 500;
@@ -21,7 +21,7 @@ public class LevelViewLevelTwo extends LevelView {
 	private final Rectangle healthBarBorder;
 	private final Text bossHealthText;
 	
-	public LevelViewLevelTwo(Group root, int heartsToDisplay) {
+	public LevelViewBossOne(Group root, int heartsToDisplay) {
 		super(root, heartsToDisplay);
 		this.root = root;
 		this.shieldImage = new ShieldImage(SHIELD_X_POSITION, SHIELD_Y_POSITION);

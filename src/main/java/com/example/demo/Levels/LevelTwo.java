@@ -1,53 +1,60 @@
 package com.example.demo.Levels;
 
-import com.example.demo.Planes.Boss;
+import com.example.demo.GameObject;
 
+/**
+ * 2nd level of the game
+ */
 public class LevelTwo extends LevelParent {
 
-	private static final String BACKGROUND_IMAGE_NAME = "/com/example/demo/images/background2.jpg";
-	private static final int PLAYER_INITIAL_HEALTH = 5;
-	private static final double HEART_SPAWN_PROBABILITY = .002;
-	private static final double FREEZE_SPAWN_PROBABILITY = .002;
-	private static final int HEART_SPAWN_LIMIT = 3;
-	private final Boss boss;
-	private LevelViewLevelTwo levelView;
+    private static final String BACKGROUND_IMAGE_NAME = "/com/example/demo/images/sunset.jpg";
+    private static final String NEXT_LEVEL = "com.example.demo.Levels.BossOne";
+    private static final int TOTAL_ENEMIES = 6;
+    private static final int KILLS_TO_ADVANCE = 20;
+    private static final double ENEMY_SPAWN_PROBABILITY = .23;
+    private static final int PLAYER_INITIAL_HEALTH = 5;
+    private static final double HEART_SPAWN_PROBABILITY = .002;
+    private static final double FREEZE_SPAWN_PROBABILITY = .002;
+    private static final int HEART_SPAWN_LIMIT = 2;
 
-	public LevelTwo(double screenHeight, double screenWidth) {
-		super(BACKGROUND_IMAGE_NAME, screenHeight, screenWidth, PLAYER_INITIAL_HEALTH, HEART_SPAWN_LIMIT, HEART_SPAWN_PROBABILITY, FREEZE_SPAWN_PROBABILITY);
-		boss = new Boss(levelView);
-	}
+    public LevelTwo(double screenHeight, double screenWidth) {
+        super(BACKGROUND_IMAGE_NAME, screenHeight, screenWidth, PLAYER_INITIAL_HEALTH, HEART_SPAWN_LIMIT, HEART_SPAWN_PROBABILITY,
+                FREEZE_SPAWN_PROBABILITY);
+    }
 
-	@Override
-	protected void initializeFriendlyUnits() {
-		getRoot().getChildren().add(getUser());
-	}
+    @Override
+    protected void checkIfGameOver() {
+        if (userIsDestroyed()) {
+            loseGame();
+        }
+        else if (userHasReachedKillTarget())
+            goToNextLevel(NEXT_LEVEL);
+    }
 
-	@Override
-	protected void checkIfGameOver() {
-		if (userIsDestroyed()) {
-			loseGame();
-		}
-		else if (boss.isDestroyed()) {
-			winGame();
-		}
-	}
+    @Override
+    protected void initializeFriendlyUnits() {
+        getRoot().getChildren().add(getUser());
+    }
 
-	@Override
-	protected void spawnEnemyUnits() {
-		if (getCurrentNumberOfEnemies() == 0) {
-			addEnemyUnit(boss);
-		}
-	}
+    @Override
+    protected void spawnEnemyUnits() {
+        int currentNumberOfEnemies = getCurrentNumberOfEnemies();
+        for (int i = 0; i < TOTAL_ENEMIES - currentNumberOfEnemies; i++) {
+            if (Math.random() < ENEMY_SPAWN_PROBABILITY) {
+                double newEnemyInitialYPosition = Math.random() * getEnemyMaximumYPosition();
+                GameObject newEnemy = this.getEnemyFactory().createEntity(getScreenWidth(), newEnemyInitialYPosition); // Modified to use factory method
+                addEnemyUnit(newEnemy);
+            }
+        }
+    }
 
-	@Override
-	protected LevelView instantiateLevelView() {
-		levelView = new LevelViewLevelTwo(getRoot(), PLAYER_INITIAL_HEALTH);
-		return levelView;
-	}
-	@Override
-	protected void updateScene(){
-		super.updateScene();
-		levelView.updateBossHealth(boss.getHealth(), boss.getMaxHealth());
-	}
+    @Override
+    protected LevelView instantiateLevelView() {
+        return new LevelView(getRoot(), PLAYER_INITIAL_HEALTH);
+    }
+
+    private boolean userHasReachedKillTarget() {
+        return getUser().getNumberOfKills() >= KILLS_TO_ADVANCE;
+    }
 
 }

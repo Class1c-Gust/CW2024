@@ -9,7 +9,8 @@ import javafx.scene.Group;
 public class Heart extends Powerup {
     private static final String IMAGE_NAME = "heart.png";
     private static final int IMAGE_HEIGHT = 50;
-    private static final int HORIZONTAL_VELOCITY = -10;
+    private static final double frameDelay = 0.4;
+    private static final int HORIZONTAL_VELOCITY = (int)(-10*frameDelay);
 
 
     public Heart(double initialYPos) {
@@ -32,7 +33,6 @@ public class Heart extends Powerup {
      */
     @Override
     public void activatePower(Group root, UserPlane user){
-        this.destroy();
         user.addHealth();
 
     }

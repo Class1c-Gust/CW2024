@@ -1,7 +1,7 @@
 package com.example.demo.Planes;
 
 import com.example.demo.GameObject;
-import com.example.demo.Levels.LevelViewLevelTwo;
+import com.example.demo.Levels.LevelViewBossOne;
 import com.example.demo.Projectiles.BossProjectile;
 
 import java.util.*;
@@ -15,7 +15,8 @@ public class Boss extends FighterPlane {
 	private static final double BOSS_FIRE_RATE = .04;
 	private static final double BOSS_SHIELD_PROBABILITY = .002;
 	private static final int IMAGE_HEIGHT = 300;
-	private static final int VERTICAL_VELOCITY = 8;
+	private static final double frameDelay = 0.4;
+	private static final int VERTICAL_VELOCITY = (int)(8*frameDelay);
 	private static final int MAX_HEALTH = 100;
 	private static final int MOVE_FREQUENCY_PER_CYCLE = 5;
 	private static final int ZERO = 0;
@@ -30,9 +31,9 @@ public class Boss extends FighterPlane {
 	private int framesWithShieldActivated;
 	private int currentHealth;
 	private double currentPosition;
-	private final LevelViewLevelTwo levelview;
+	private final LevelViewBossOne levelview;
 
-	public Boss(LevelViewLevelTwo p_levelview) {
+	public Boss(LevelViewBossOne p_levelview) {
 		super(IMAGE_NAME, IMAGE_HEIGHT, INITIAL_X_POSITION, INITIAL_Y_POSITION, MAX_HEALTH);
 		this.levelview = p_levelview;
 		movePattern = new ArrayList<>();

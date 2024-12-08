@@ -1,6 +1,8 @@
 package com.example.demo.Levels;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 import java.util.function.Consumer;
 import com.example.demo.*;
 import com.example.demo.Planes.EnemyPlaneFactory;
@@ -14,14 +16,20 @@ import com.example.demo.Powerups.Multishot;
 import javafx.animation.*;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.*;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
+import javafx.scene.control.Label;
+import javafx.scene.paint.Color;
 
 public abstract class LevelParent {
 
 	private static final double SCREEN_HEIGHT_ADJUSTMENT = 150;
-	private static final int MILLISECOND_DELAY = 50;
+	private static final double MILLISECOND_DELAY = 16.67;
 	private final double screenHeight;
 	private final double screenWidth;
 	private final double enemyMaximumYPosition;
@@ -104,6 +112,7 @@ public abstract class LevelParent {
 		return scene;
 	}
 
+
 	public void startGame() {
 		background.requestFocus();
 		timeline.play();
@@ -114,8 +123,44 @@ public abstract class LevelParent {
 	public void goToNextLevel(String levelName) {
 		if (levelchange != null){
 			timeline.stop();
-			levelchange.accept(levelName);
+			final int[] countdown = {5};
+			Label countdownLabel = new Label();
+			Label levelClearedText = new Label("LEVEL CLEARED! NEXT LEVEL COMMENCING IN ");
+			countdownLabel.setStyle("-fx-font-family: 'Trebuchet MS'; -fx-font-weight: bold; -fx-font-size: 20;");
+			levelClearedText.setStyle("-fx-font-family: 'Trebuchet MS'; -fx-font-weight: bold; -fx-font-size: 20;");
+
+			levelClearedText.setLayoutX((screenWidth / 2 - 250));
+			levelClearedText.setLayoutY(screenHeight / 2 - 50); // Center horizontally
+			countdownLabel.setLayoutX(screenWidth/2 - 50);
+			countdownLabel.setLayoutY(5 + screenHeight/2);
+
+			resetScreen(); // remove all screen elements
+			root.getChildren().addAll(levelClearedText, countdownLabel); // add labels to screen
+
+			Timeline mytimeline = new Timeline( // Displays countdown from 5
+					new KeyFrame(Duration.seconds(1), event -> {
+						countdown[0]--;
+						countdownLabel.setText(String.valueOf(countdown[0]));
+						if (countdown[0] <= 0) {
+							countdownLabel.setText("Time's Up!");
+						}
+					})
+			);
+			mytimeline.setCycleCount(5); // 5 seconds countdown
+			mytimeline.setOnFinished(event -> {
+				levelchange.accept(levelName); // change level after countdown
+			});
+			mytimeline.play();
 		}
+	}
+
+	/**
+	 * Remove all elements from the scene and reinitialise the background image
+	 */
+	private void resetScreen(){
+		this.root.getChildren().clear();
+		initializeBackground();
+
 	}
 
 	protected void updateScene() {
@@ -151,11 +196,14 @@ public abstract class LevelParent {
             KeyCode kc = e.getCode();
             if (kc == KeyCode.UP) user.moveUp();
             if (kc == KeyCode.DOWN) user.moveDown();
+			if (kc == KeyCode.LEFT) user.moveLeft(); // Added horizontal movement functionality
+			if (kc == KeyCode.RIGHT) user.moveRight();
             if (kc == KeyCode.SPACE) fireProjectile();
         });
 		background.setOnKeyReleased(e -> {
             KeyCode kc = e.getCode();
-            if (kc == KeyCode.UP || kc == KeyCode.DOWN) user.stop();
+            if (kc == KeyCode.UP || kc == KeyCode.DOWN) user.stopVertical(); // split movement between horizontal and vertical
+			if (kc == KeyCode.LEFT || kc == KeyCode.RIGHT) user.stopHorizontal();
         });
 		root.getChildren().add(background);
 	}
@@ -294,11 +342,13 @@ public abstract class LevelParent {
 		for (Powerup powerup : powerups){
 			if (powerup.getExactBounds().intersects(user.getExactBounds())){
 				powerup.activatePower(root, user);
+				powerup.destroy(); // destroy powerup icon after activated
 			}
 			else{
 				for (GameObject projectile : userProjectiles){
 					if (powerup.getExactBounds().intersects(projectile.getExactBounds()) && powerup.isShootable()) {
 						powerup.activatePower(root, user);
+						powerup.destroy();
 					}
 				}
 			}
