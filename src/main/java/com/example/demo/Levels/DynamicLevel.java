@@ -7,7 +7,7 @@ public class DynamicLevel extends LevelParent {
     private final int levelNumber;
 
     public DynamicLevel(double screenHeight, double screenWidth, int levelNumber) {
-        super("/com/example/demo/images/background" + ((levelNumber % 4) + 1) + ".jpg",
+        super("/com/example/demo/images/background" + (levelNumber) + ".jpg",
                 screenHeight,
                 screenWidth,
                 5, // initial health

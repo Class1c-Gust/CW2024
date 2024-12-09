@@ -2,6 +2,7 @@ package com.example.demo.Planes;
 
 import com.example.demo.GameObject;
 import com.example.demo.Levels.LevelViewBossOne;
+import com.example.demo.Projectiles.BossMissile;
 import com.example.demo.Projectiles.BossProjectile;
 
 import java.util.*;
@@ -23,9 +24,11 @@ public class Boss extends FighterPlane {
     private int framesWithShieldActivated;
     private int currentHealth;
     private double currentPosition;
+    private boolean hasFiredMissile;
+    private int missilesFired;
 
     public Boss(BossConfiguration config, LevelViewBossOne p_levelview, int levelNumber) {
-        super(("bossplane" + (levelNumber / 2) + ".png"), IMAGE_HEIGHT, INITIAL_X_POSITION, INITIAL_Y_POSITION, config.getMaxHealth());
+        super(("bossplane" + (levelNumber / 3) + ".png"), IMAGE_HEIGHT, INITIAL_X_POSITION, INITIAL_Y_POSITION, config.getMaxHealth());
         this.setFitWidth(300);
         this.setFitHeight(200);
         this.config = config;
@@ -36,6 +39,8 @@ public class Boss extends FighterPlane {
         framesWithShieldActivated = 0;
         isShielded = false;
         this.currentHealth = config.getMaxHealth();
+        this.hasFiredMissile = false;
+        this.missilesFired = 0;
         initializeMovePattern();
     }
 
@@ -57,7 +62,23 @@ public class Boss extends FighterPlane {
 
     @Override
     public GameObject fireProjectile() {
-        return bossFiresInCurrentFrame() ? new BossProjectile(getProjectileInitialPosition()) : null;
+        if (missileEnabled()){
+            firedMissile();
+            return new BossMissile(getProjectileInitialPosition());
+        }
+        else {
+            return bossFiresInCurrentFrame() ? new BossProjectile(getProjectileInitialPosition()) : null;
+        }
+
+    }
+
+    public void firedMissile(){
+        hasFiredMissile = true;
+        missilesFired += 1;
+    }
+
+    private boolean missileEnabled(){
+        return (Math.random() < config.getMissileProbability()) && (!hasFiredMissile) && missilesFired < config.getMissilesLimit();
     }
     
     @Override

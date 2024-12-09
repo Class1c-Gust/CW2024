@@ -33,7 +33,7 @@ public class BossLevelOne extends LevelParent {
 			loseGame();
 		}
 		else if (boss.isDestroyed()) {
-			goToNextLevel("DYNAMIC_" + (levelNumber + 1));
+			goToNextLevel("LEVEL_" + (levelNumber+1));
 		}
 	}
 
