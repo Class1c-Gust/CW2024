@@ -10,7 +10,8 @@ import com.example.demo.Levels.LevelFactory;
 
 public class Controller {
 
-	private static final String LEVEL_ONE_CLASS_NAME = "com.example.demo.Levels.LevelOne";
+//	private static final String LEVEL_ONE_CLASS_NAME = "com.example.demo.Levels.LevelOne";
+	private static final String LEVEL_ONE_CLASS_NAME = "LEVEL_1";
 	private final Stage stage;
 
 	public Controller(Stage stage) {

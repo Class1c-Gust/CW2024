@@ -1,6 +1,7 @@
 package com.example.demo.Levels;
 
 import com.example.demo.Planes.Boss;
+import com.example.demo.Planes.BossFactory;
 
 /**
  * Class representing the first boss level
@@ -14,10 +15,11 @@ public class BossLevelOne extends LevelParent {
 	private static final int HEART_SPAWN_LIMIT = 3;
 	private final Boss boss;
 	private LevelViewBossOne levelView;
-
-	public BossLevelOne(double screenHeight, double screenWidth) {
+	private final int levelNumber;
+	public BossLevelOne(double screenHeight, double screenWidth, int levelNumber) {
 		super(BACKGROUND_IMAGE_NAME, screenHeight, screenWidth, PLAYER_INITIAL_HEALTH, HEART_SPAWN_LIMIT, HEART_SPAWN_PROBABILITY, FREEZE_SPAWN_PROBABILITY);
-		boss = new Boss(levelView);
+		boss = BossFactory.createBoss(levelNumber, levelView);
+		this.levelNumber = levelNumber;
 	}
 
 	@Override
@@ -31,7 +33,7 @@ public class BossLevelOne extends LevelParent {
 			loseGame();
 		}
 		else if (boss.isDestroyed()) {
-			winGame();
+			goToNextLevel("DYNAMIC_" + (levelNumber + 1));
 		}
 	}
 
