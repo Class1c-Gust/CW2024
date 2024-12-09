@@ -38,6 +38,7 @@ public class Multishot extends Powerup {
      */
     @Override
     public void activatePower(Group root, UserPlane user){
+        this.destroy();
         user.enableMultiShot();
 
 

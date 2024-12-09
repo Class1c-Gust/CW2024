@@ -175,10 +175,27 @@ public abstract class LevelParent {
 		generateEnemyFire();
 		updateNumberOfEnemies();
 		collisionManager.handleGameCollisions();
+		handlePowerupCollisions();
+		removeDestroyedPowerups(powerups);
 		removeAllDestroyedActors();
 		updateKillCount();
 		updateLevelView();
 		checkIfGameOver();
+	}
+
+	public void handlePowerupCollisions(){
+		for (Powerup powerup : powerups){
+			if (powerup.getExactBounds().intersects(user.getExactBounds())){
+				powerup.activatePower(root, user);
+			}
+			else{
+				for (GameObject projectile : userProjectiles){
+					if (powerup.getExactBounds().intersects(projectile.getExactBounds()) && powerup.isShootable()) {
+						powerup.activatePower(root, user);
+					}
+				}
+			}
+		}
 	}
 
 	private void initializeTimeline() {
@@ -323,7 +340,7 @@ public abstract class LevelParent {
 		List<Powerup> destroyedActors = actors.stream().filter(Powerup::isDestroyed)
 				.toList();
 		root.getChildren().removeAll(destroyedActors);
-//		actors.removeAll(destroyedActors);
+		actors.removeAll(destroyedActors);
 	}
 
 	/**

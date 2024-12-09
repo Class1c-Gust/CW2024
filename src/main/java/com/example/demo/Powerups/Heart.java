@@ -33,6 +33,7 @@ public class Heart extends Powerup {
      */
     @Override
     public void activatePower(Group root, UserPlane user){
+        this.destroy();
         user.addHealth();
 
     }

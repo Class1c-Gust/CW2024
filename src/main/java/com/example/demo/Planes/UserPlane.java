@@ -22,7 +22,7 @@ public class UserPlane extends FighterPlane {
 	private static final double frameDelay = 0.4;
 	private static final int VERTICAL_VELOCITY = (int)(8*frameDelay);
 	private static final int HORIZONTAL_VELOCITY = (int)(8*frameDelay);
-	private static final int PROJECTILE_X_POSITION = 110;
+//	private static final int PROJECTILE_X_POSITION = 110;
 	private static final int PROJECTILE_Y_POSITION_OFFSET = 20;
 	private int VerticalVelocityMultiplier;
 	private int HorizontalVelocityMultiplier;
@@ -71,7 +71,7 @@ public class UserPlane extends FighterPlane {
 		long currentTime = System.currentTimeMillis();
 		if (currentTime - lastTimeFired >= PROJECTILE_COOLDOWN){
 			lastTimeFired = currentTime;
-			return projectileFactory.createUserProjectile(PROJECTILE_X_POSITION, getProjectileYPosition(PROJECTILE_Y_POSITION_OFFSET));
+			return projectileFactory.createUserProjectile(getLayoutX() + getTranslateX(), getProjectileYPosition(PROJECTILE_Y_POSITION_OFFSET));
 		}
 		return null;
 	}
@@ -132,9 +132,9 @@ public class UserPlane extends FighterPlane {
 				lastTimeFired = currentTime;
 				if (multiShotEnabled) {
 					double yPos = getProjectileYPosition(PROJECTILE_Y_POSITION_OFFSET);
-					projectiles.add(projectileFactory.createUserProjectile(PROJECTILE_X_POSITION, yPos - 20));
-					projectiles.add(projectileFactory.createUserProjectile(PROJECTILE_X_POSITION, yPos));
-					projectiles.add(projectileFactory.createUserProjectile(PROJECTILE_X_POSITION, yPos + 20));
+					projectiles.add(projectileFactory.createUserProjectile(getLayoutX() + getTranslateX(), yPos - 20));
+					projectiles.add(projectileFactory.createUserProjectile(getLayoutX() + getTranslateX(), yPos));
+					projectiles.add(projectileFactory.createUserProjectile(getLayoutX() + getTranslateX(), yPos + 20));
 				} else {
 					projectiles.add(fireProjectile());
 				}

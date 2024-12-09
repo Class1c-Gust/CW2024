@@ -53,6 +53,7 @@ public class Freeze extends Powerup {
      */
     @Override
     public void activatePower(Group root, UserPlane user){
+        this.destroy();
         Glow glow = new Glow();
         glow.setLevel(0.9);
         root.getChildren().forEach(node -> {
