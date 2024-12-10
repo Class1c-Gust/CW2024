@@ -13,16 +13,19 @@ public class BossConfiguration {
     private final double projectileSpeed;
     private final int level;
     private final int missilesLimit;
+    private static final double frameDelay = 0.4;
+    private final int verticalVelocity;
 
     public BossConfiguration(int level) {
         this.level = level;
-        this.maxHealth = 10 + (level * 2);
+        this.maxHealth = 1 + (level * 2);
         this.fireRate = 0.009 + (level * 0.01);
         this.shieldProbability = 0.002 + (level * 0.0005);
         this.moveFrequency = 5 + level;
         this.projectileSpeed = 5 + (level * 0.5);
         this.missileProbability = 0.002 + (level * 0.0005);
-        this.missilesLimit = (level/3) + 1;
+        this.missilesLimit = (level == 9) ? 100 : (level/3);
+        this.verticalVelocity = (int)(8*frameDelay) + level/3;
     }
 
     public int getMaxHealth() { return maxHealth; }
@@ -32,5 +35,6 @@ public class BossConfiguration {
     public double getProjectileSpeed() { return projectileSpeed; }
     public double getMissileProbability(){return missileProbability;}
     public int getLevel() { return level; }
+    public double getVelocity(){return verticalVelocity;}
     public int getMissilesLimit() { return missilesLimit; }
 }

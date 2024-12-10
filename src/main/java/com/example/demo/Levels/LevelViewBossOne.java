@@ -16,7 +16,6 @@ public class LevelViewBossOne extends LevelView {
 	private static final int HEALTH_BAR_X_POSITION = 900;
 	private static final int HEALTH_BAR_Y_POSITION = 20;
 	private final Group root;
-	private final ShieldImage shieldImage;
 	private final Rectangle healthBar;
 	private final Rectangle healthBarBorder;
 	private final Text bossHealthText;
@@ -24,7 +23,6 @@ public class LevelViewBossOne extends LevelView {
 	public LevelViewBossOne(Group root, int heartsToDisplay) {
 		super(root, heartsToDisplay);
 		this.root = root;
-		this.shieldImage = new ShieldImage(SHIELD_X_POSITION, SHIELD_Y_POSITION);
 		bossHealthText = new Text();
 		bossHealthText.setStroke(Color.BLACK);
 		bossHealthText.setFont(new Font(20));
@@ -38,23 +36,6 @@ public class LevelViewBossOne extends LevelView {
 		healthBarBorder.setStroke(Color.BLACK);
 		healthBarBorder.setStrokeWidth(2);
 		root.getChildren().addAll(healthBarBorder, healthBar, bossHealthText);
-	}
-	
-	private void addImagesToRoot() {
-		root.getChildren().addAll(shieldImage);
-	}
-	
-	public void showShield() {
-		shieldImage.showShield();
-		addImagesToRoot();
-	}
-
-	public void hideShield() {
-		shieldImage.hideShield();
-	}
-
-	public void updateShield (double y){
-		shieldImage.updateShield(y);
 	}
 
 	public void updateBossHealth(int bossHealth, int maxHealth) {

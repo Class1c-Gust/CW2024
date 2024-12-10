@@ -52,7 +52,6 @@ public abstract class LevelParent {
 	private final double freezeSpawnProbability;
 	private final double multishotSpawnProbability;
 	private final int powerupLimit;
-	private final int weaponSpawnLimit;
 	private final LevelView levelView;
 	private Consumer<String> levelchange;
 	private final EnemyPlaneFactory enemyFactory;
@@ -68,7 +67,6 @@ public abstract class LevelParent {
 		UserPlaneFactory userFactory = new UserPlaneFactory(playerInitialHealth);
 		this.user = userFactory.createUserPlane();
 		this.enemyFactory = new EnemyPlaneFactory();
-//		this.projectileFactory = new ProjectileFactory(backgroundImageName, screenHeight);
 		this.friendlyUnits = new ArrayList<>();
 		this.enemyUnits = new ArrayList<>();
 		this.powerups = new ArrayList<>();
@@ -85,7 +83,6 @@ public abstract class LevelParent {
 		this.currentNumberOfEnemies = 0;
 		this.freezeSpawnProbability = freezeSpawnProbability;
 		this.multishotSpawnProbability = .001;
-		this.weaponSpawnLimit = 3;
 		initializeTimeline();
 		friendlyUnits.add(user);
 		this.collisionManager = new CollisionManager(root, user, friendlyUnits, enemyUnits,
@@ -287,7 +284,7 @@ public abstract class LevelParent {
 	 * Creates freeze powerup if probability is met and adds it to the powerup list
 	 */
 	private void updateFreezeSpawn(){
-		if (Math.random() < freezeSpawnProbability && powerups.size() < weaponSpawnLimit){
+		if (Math.random() < freezeSpawnProbability && powerups.size() < powerupLimit){
 			Freeze freeze = new Freeze(randomYposition());
 			root.getChildren().add(freeze);
 			powerups.add(freeze);

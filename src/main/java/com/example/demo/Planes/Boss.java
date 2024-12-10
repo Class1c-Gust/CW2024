@@ -4,6 +4,8 @@ import com.example.demo.GameObject;
 import com.example.demo.Levels.LevelViewBossOne;
 import com.example.demo.Projectiles.BossMissile;
 import com.example.demo.Projectiles.BossProjectile;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.paint.Color;
 
 import java.util.*;
 
@@ -13,8 +15,6 @@ public class Boss extends FighterPlane {
     private static final double INITIAL_Y_POSITION = 400;
     private static final double PROJECTILE_Y_POSITION_OFFSET = 75.0;
     private static final int IMAGE_HEIGHT = 200;
-    private static final double frameDelay = 0.4;
-    private static final int VERTICAL_VELOCITY = (int)(8*frameDelay);
     private final BossConfiguration config;
     private final LevelViewBossOne levelview;
     private final List<Integer> movePattern;
@@ -26,6 +26,7 @@ public class Boss extends FighterPlane {
     private double currentPosition;
     private boolean hasFiredMissile;
     private int missilesFired;
+    private final DropShadow shieldGlowEffect;
 
     public Boss(BossConfiguration config, LevelViewBossOne p_levelview, int levelNumber) {
         super(("bossplane" + (levelNumber / 3) + ".png"), IMAGE_HEIGHT, INITIAL_X_POSITION, INITIAL_Y_POSITION, config.getMaxHealth());
@@ -41,6 +42,11 @@ public class Boss extends FighterPlane {
         this.currentHealth = config.getMaxHealth();
         this.hasFiredMissile = false;
         this.missilesFired = 0;
+
+        shieldGlowEffect = new DropShadow();
+        shieldGlowEffect.setColor(Color.RED); // Shield emits a red glow
+        shieldGlowEffect.setRadius(30);
+        shieldGlowEffect.setSpread(0.5);
         initializeMovePattern();
     }
 
@@ -57,7 +63,7 @@ public class Boss extends FighterPlane {
     @Override
     public void updateActor() {
         updatePosition();
-        updateShield(currentPosition);
+        updateShield();
     }
 
     @Override
@@ -72,13 +78,12 @@ public class Boss extends FighterPlane {
 
     }
 
-    public void firedMissile(){
-        hasFiredMissile = true;
+    private void firedMissile(){
         missilesFired += 1;
     }
 
     private boolean missileEnabled(){
-        return (Math.random() < config.getMissileProbability()) && (!hasFiredMissile) && missilesFired < config.getMissilesLimit();
+        return (Math.random() < config.getMissileProbability()) && missilesFired < config.getMissilesLimit();
     }
     
     @Override
@@ -91,18 +96,17 @@ public class Boss extends FighterPlane {
 
     private void initializeMovePattern() {
         for (int i = 0; i < config.getMoveFrequency(); i++) {
-            movePattern.add(VERTICAL_VELOCITY);
-            movePattern.add(-VERTICAL_VELOCITY);
+            movePattern.add((int)config.getVelocity());
+            movePattern.add((int)-config.getVelocity());
             movePattern.add(0);
         }
         Collections.shuffle(movePattern);
     }
 
-    private void updateShield(double y) {
+    private void updateShield() {
         if (isShielded) framesWithShieldActivated++;
         else if (shieldShouldBeActivated()) activateShield();    
         if (shieldExhausted()) deactivateShield();
-        levelview.updateShield(y);
     }
 
     private int getNextMove() {
@@ -137,13 +141,14 @@ public class Boss extends FighterPlane {
 
     private void activateShield() {
         isShielded = true;
-        levelview.showShield();
+        setEffect(shieldGlowEffect);
+//        levelview.showShield();
     }
 
     private void deactivateShield() {
         isShielded = false;
-        levelview.hideShield();
         framesWithShieldActivated = 0;
+        setEffect(null);
     }
     
     public int getHealth(){
