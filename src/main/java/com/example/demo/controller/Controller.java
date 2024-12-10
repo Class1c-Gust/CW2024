@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
 import java.lang.reflect.InvocationTargetException;
+
+import com.example.demo.MainMenu;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -13,17 +15,38 @@ public class Controller {
 //	private static final String LEVEL_ONE_CLASS_NAME = "com.example.demo.Levels.LevelOne";
 	private static final String LEVEL_ONE_CLASS_NAME = "LEVEL_1";
 	private final Stage stage;
+	private MainMenu mainMenu;
 
 	public Controller(Stage stage) {
 		this.stage = stage;
 	}
 
-	public void launchGame() throws ClassNotFoundException, NoSuchMethodException, SecurityException,
-			InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException  {
-
-			stage.show();
-			goToLevel(LEVEL_ONE_CLASS_NAME);
+	public void launchGame() {
+		showMainMenu();
+		stage.show();
 	}
+
+	private void showMainMenu() {
+		if (mainMenu == null) {
+			mainMenu = new MainMenu(stage.getWidth(), stage.getHeight());
+			mainMenu.setOnStart(() -> {
+				try {
+					goToLevel(LEVEL_ONE_CLASS_NAME);
+				} catch (Exception e) {
+					showError(e);
+				}
+			});
+		}
+		stage.setScene(mainMenu.getScene());
+	}
+
+	private void showError(Exception e) {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Error");
+		alert.setContentText(e.getMessage());
+		alert.show();
+	}
+
 /**
 Modified to use Levelfactory
  **/

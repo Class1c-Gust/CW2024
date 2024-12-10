@@ -1,28 +1,23 @@
 package com.example.demo.controller;
 
-import java.lang.reflect.InvocationTargetException;
-
 import javafx.application.Application;
 import javafx.stage.Stage;
+import com.example.demo.config.Config;
+import java.lang.reflect.InvocationTargetException;
 
 public class Main extends Application {
 
-	private static final int SCREEN_WIDTH = 1300;
-	private static final int SCREEN_HEIGHT = 750;
-	private static final String TITLE = "Sky Battle";
-
     @Override
-	public void start(Stage stage) throws ClassNotFoundException, NoSuchMethodException, SecurityException,
-		 	InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-		stage.setResizable(false);
-		stage.setHeight(SCREEN_HEIGHT);
-		stage.setWidth(SCREEN_WIDTH);
-		stage.setTitle(TITLE);
+    public void start(Stage stage) throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        stage.setResizable(false);
+        stage.setHeight(Config.Screen.HEIGHT);
+        stage.setWidth(Config.Screen.WIDTH);
+        stage.setTitle(Config.Screen.TITLE);
         Controller myController = new Controller(stage);
-		myController.launchGame();
-	}
+        myController.launchGame();
+    }
 
-	public static void main(String[] args) {
-		launch();
-	}
+    public static void main(String[] args) {
+        launch();
+    }
 }

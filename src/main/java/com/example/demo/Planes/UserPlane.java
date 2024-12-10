@@ -2,6 +2,7 @@ package com.example.demo.Planes;
 
 import com.example.demo.GameObject;
 import com.example.demo.Projectiles.ProjectileFactory;
+import com.example.demo.config.Config;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
@@ -11,32 +12,29 @@ import java.util.List;
 
 public class UserPlane extends FighterPlane {
 
-	private static final String IMAGE_NAME = "userplane.png";
-	private static final double Y_UPPER_BOUND = -40;
-	private static final double Y_LOWER_BOUND = 600.0;
-	private static final double X_LEFT_BOUND = 0.0;
-	private static final double X_RIGHT_BOUND = 900.0;
-	private static final double INITIAL_X_POSITION = 5.0;
-	private static final double INITIAL_Y_POSITION = 300.0;
-	private static final int IMAGE_HEIGHT = 150;
-	private static final double frameDelay = 0.4;
-	private static final int VERTICAL_VELOCITY = (int)(8*frameDelay);
-	private static final int HORIZONTAL_VELOCITY = (int)(8*frameDelay);
-//	private static final int PROJECTILE_X_POSITION = 110;
-	private static final int PROJECTILE_Y_POSITION_OFFSET = 20;
+	public UserPlane(int initialHealth) {
+		super(Config.Player.IMAGE_NAME, Config.Player.IMAGE_HEIGHT,
+		      Config.Player.INITIAL_X_POSITION, Config.Player.INITIAL_Y_POSITION,
+		      initialHealth);
+		VerticalVelocityMultiplier = 0;
+		this.HorizontalVelocityMultiplier = 0;
+	}
+
+	private static final double Y_UPPER_BOUND = Config.Player.Y_UPPER_BOUND;
+	private static final double Y_LOWER_BOUND = Config.Player.Y_LOWER_BOUND;
+	private static final double X_LEFT_BOUND = Config.Player.X_LEFT_BOUND;
+	private static final double X_RIGHT_BOUND = Config.Player.X_RIGHT_BOUND;
+	private static final double frameDelay = Config.Game.FRAME_DELAY;
+	private static final int VERTICAL_VELOCITY = (int)(8 * frameDelay);
+	private static final int HORIZONTAL_VELOCITY = (int)(8 * frameDelay);
+	private static final int PROJECTILE_Y_POSITION_OFFSET = Config.Player.PROJECTILE_Y_POSITION_OFFSET;
 	private int VerticalVelocityMultiplier;
 	private int HorizontalVelocityMultiplier;
 	private boolean multiShotEnabled = false;
 	private int numberOfKills;
-	ProjectileFactory projectileFactory = new ProjectileFactory(IMAGE_NAME, IMAGE_HEIGHT);
+	ProjectileFactory projectileFactory = new ProjectileFactory(Config.Player.IMAGE_NAME, Config.Player.IMAGE_HEIGHT);
 	private long lastTimeFired = 0; // Track the last time the user fired a projectile
-	private static final long PROJECTILE_COOLDOWN = 200;
-
-	public UserPlane(int initialHealth) {
-		super(IMAGE_NAME, IMAGE_HEIGHT, INITIAL_X_POSITION, INITIAL_Y_POSITION, initialHealth);
-		VerticalVelocityMultiplier = 0;
-		this.HorizontalVelocityMultiplier = 0;
-	}
+	private static final long PROJECTILE_COOLDOWN = Config.Player.PROJECTILE_COOLDOWN;
 
 	/**
 	 * Updates position of the plane vertically and horizontally on the screen
@@ -153,7 +151,7 @@ public class UserPlane extends FighterPlane {
 		this.multiShotEnabled = true;
 
 		// Schedule deactivation after 10 seconds
-		Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(10), e -> this.multiShotEnabled = false));
+		Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(Config.Powerup.MULTISHOT_DURATION), e -> this.multiShotEnabled = false));
 		timeline.setCycleCount(1);
 		timeline.play();
 	}

@@ -5,17 +5,23 @@ import com.example.demo.Projectiles.ProjectileFactory;
 
 public class EnemyPlane extends FighterPlane {
 
-	private static final String IMAGE_NAME = "enemyplane.png";
 	private static final int IMAGE_HEIGHT = 150;
 	private static final double frameDelay = 0.4;
-	private static final int HORIZONTAL_VELOCITY = (int)(-6*frameDelay);
+	
+	private final String imageName;
+	private final int horizontalVelocity;
+	private final double fireRate;
 	private static final double PROJECTILE_X_POSITION_OFFSET = -100.0;
 	private static final double PROJECTILE_Y_POSITION_OFFSET = 50.0;
 	private static final int INITIAL_HEALTH = 1;
-	private static final double FIRE_RATE = .001;
-
-	public EnemyPlane(double initialXPos, double initialYPos) {
-		super(IMAGE_NAME, IMAGE_HEIGHT, initialXPos, initialYPos, INITIAL_HEALTH);
+	
+	public EnemyPlane(String imageName, double initialXPos, double initialYPos, int speed, double fireRate) {
+		super(imageName, IMAGE_HEIGHT, initialXPos, initialYPos, INITIAL_HEALTH);
+		this.imageName = imageName;
+		this.setFitWidth(200);
+		this.setFitHeight(150);
+		this.horizontalVelocity = (int)(speed * frameDelay);
+		this.fireRate = fireRate;
 	}
 
 	/**
@@ -24,19 +30,19 @@ public class EnemyPlane extends FighterPlane {
 	@Override
 	public void updatePosition() {
 		if (!getDisabledStatus()) {
-			moveHorizontally(HORIZONTAL_VELOCITY);
+			moveHorizontally(horizontalVelocity);
 		}
 	}
 
 	/**
-	 * Modified - Integrated yse of the projectile factory to create projectile instances
+	 * Modified - Integrated use of the projectile factory to create projectile instances
 	 * Projectile isn't fired when the plane is disabled
 	 * @return - Projectile object
 	 */
 	@Override
 	public GameObject fireProjectile() {
-		if (Math.random() < FIRE_RATE && !getDisabledStatus()) {
-			ProjectileFactory projectileFactory = new ProjectileFactory(IMAGE_NAME, IMAGE_HEIGHT);
+		if (Math.random() < fireRate && !getDisabledStatus()) {
+			ProjectileFactory projectileFactory = new ProjectileFactory(imageName, IMAGE_HEIGHT);
 			return projectileFactory.createEnemyProjectile(getProjectileXPosition(PROJECTILE_X_POSITION_OFFSET), getProjectileYPosition(PROJECTILE_Y_POSITION_OFFSET));
 		}
 		return null;

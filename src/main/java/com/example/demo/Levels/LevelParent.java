@@ -56,15 +56,15 @@ public abstract class LevelParent {
 	private Consumer<String> levelchange;
 	private final EnemyPlaneFactory enemyFactory;
 	private final CollisionManager collisionManager;
-
+	private final LevelConfiguration levelConfig;
 //	private final ProjectileFactory projectileFactory;
 
-	public LevelParent(String backgroundImageName, double screenHeight, double screenWidth, int playerInitialHealth, int powerupLimit,
-					   double heartSpawnProbability, double freezeSpawnProbability) {
+	public LevelParent(String backgroundImageName, double screenHeight, double screenWidth) {
 		this.root = new Group();
 		this.scene = new Scene(root, screenWidth, screenHeight);
 		this.timeline = new Timeline();
-		UserPlaneFactory userFactory = new UserPlaneFactory(playerInitialHealth);
+		this.levelConfig = new LevelConfiguration(1);
+		UserPlaneFactory userFactory = new UserPlaneFactory(levelConfig.getPlayerInitialHealth());
 		this.user = userFactory.createUserPlane();
 		this.enemyFactory = new EnemyPlaneFactory();
 		this.friendlyUnits = new ArrayList<>();
@@ -77,12 +77,12 @@ public abstract class LevelParent {
 		this.screenWidth = screenWidth;
 		this.enemyMaximumYPosition = screenHeight - SCREEN_HEIGHT_ADJUSTMENT;
 		this.levelView = instantiateLevelView();
-		this.initialPlayerHealth = playerInitialHealth;
-		this.powerupLimit = powerupLimit;
-		this.heartSpawnProbability = heartSpawnProbability;
+		this.initialPlayerHealth = levelConfig.getPlayerInitialHealth();
+		this.powerupLimit = levelConfig.getPowerupLimit();
+		this.heartSpawnProbability = levelConfig.getHeartSpawnProbability();
 		this.currentNumberOfEnemies = 0;
-		this.freezeSpawnProbability = freezeSpawnProbability;
-		this.multishotSpawnProbability = .001;
+		this.freezeSpawnProbability = levelConfig.getFreezeSpawnProbability();
+		this.multishotSpawnProbability = .0001;
 		initializeTimeline();
 		friendlyUnits.add(user);
 		this.collisionManager = new CollisionManager(root, user, friendlyUnits, enemyUnits,

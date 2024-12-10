@@ -8,12 +8,7 @@ public class DynamicLevel extends LevelParent {
 
     public DynamicLevel(double screenHeight, double screenWidth, int levelNumber) {
         super("/com/example/demo/images/background" + (levelNumber) + ".jpg",
-                screenHeight,
-                screenWidth,
-                5, // initial health
-                2, // powerup limit
-                0.002 + (levelNumber * 0.0001), // heart spawn probability increases slightly
-                0.02 + (levelNumber * 0.001)); // freeze spawn probability increases
+                screenHeight, screenWidth); // freeze spawn probability increases
 
         this.levelNumber = levelNumber;
         this.config = new LevelConfiguration(levelNumber);
@@ -37,9 +32,9 @@ public class DynamicLevel extends LevelParent {
     protected void spawnEnemyUnits() {
         int currentNumberOfEnemies = getCurrentNumberOfEnemies();
         for (int i = 0; i < config.getTotalEnemies() - currentNumberOfEnemies; i++) {
-            if (Math.random() < config.getEnemySpawnProbability()) {
+            if (Math.random() < config.getEnemySpawnProbability() * (1 + levelNumber * 0.1)) {
                 double newEnemyInitialYPosition = Math.random() * getEnemyMaximumYPosition();
-                GameObject newEnemy = getEnemyFactory().createEntity(getScreenWidth(), newEnemyInitialYPosition);
+                GameObject newEnemy = getEnemyFactory().createEntity(getScreenWidth(), newEnemyInitialYPosition, config.getAdvancedEnemyProbability());
                 addEnemyUnit(newEnemy);
             }
         }
@@ -50,6 +45,3 @@ public class DynamicLevel extends LevelParent {
         return new LevelView(getRoot(), 5);
     }
 }
-
-
-

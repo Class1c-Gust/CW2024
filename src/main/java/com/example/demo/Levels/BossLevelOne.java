@@ -16,10 +16,12 @@ public class BossLevelOne extends LevelParent {
 	private final Boss boss;
 	private LevelViewBossOne levelView;
 	private final int levelNumber;
+	private final LevelConfiguration levelConfig;
 	public BossLevelOne(double screenHeight, double screenWidth, int levelNumber) {
-		super(BACKGROUND_IMAGE_NAME, screenHeight, screenWidth, PLAYER_INITIAL_HEALTH, HEART_SPAWN_LIMIT, HEART_SPAWN_PROBABILITY, FREEZE_SPAWN_PROBABILITY);
+		super(BACKGROUND_IMAGE_NAME, screenHeight, screenWidth);
 		boss = BossFactory.createBoss(levelNumber, levelView);
 		this.levelNumber = levelNumber;
+		this.levelConfig = new LevelConfiguration(levelNumber);
 	}
 
 	@Override
