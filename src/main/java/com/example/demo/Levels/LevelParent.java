@@ -1,10 +1,11 @@
 package com.example.demo.Levels;
 
-import java.awt.*;
 import java.util.*;
 import java.util.List;
 import java.util.function.Consumer;
 import com.example.demo.*;
+import com.example.demo.Managers.CollisionManager;
+import com.example.demo.Managers.SoundManager;
 import com.example.demo.Planes.EnemyPlaneFactory;
 import com.example.demo.Planes.FighterPlane;
 import com.example.demo.Planes.UserPlane;
@@ -16,15 +17,11 @@ import com.example.demo.Powerups.Multishot;
 import javafx.animation.*;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.image.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.*;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Font;
 import javafx.util.Duration;
 import javafx.scene.control.Label;
-import javafx.scene.paint.Color;
 
 public abstract class LevelParent {
 
@@ -39,6 +36,8 @@ public abstract class LevelParent {
 	private final UserPlane user;
 	private final Scene scene;
 	private final ImageView background;
+	private final LevelView levelView;
+	private final SoundManager soundManager;
 
 	private final List<GameObject> friendlyUnits;
 	private final List<GameObject> enemyUnits;
@@ -52,18 +51,17 @@ public abstract class LevelParent {
 	private final double freezeSpawnProbability;
 	private final double multishotSpawnProbability;
 	private final int powerupLimit;
-	private final LevelView levelView;
 	private Consumer<String> levelchange;
 	private final EnemyPlaneFactory enemyFactory;
 	private final CollisionManager collisionManager;
 	private final LevelConfiguration levelConfig;
-//	private final ProjectileFactory projectileFactory;
 
-	public LevelParent(String backgroundImageName, double screenHeight, double screenWidth) {
+	public LevelParent(String backgroundImageName, double screenHeight, double screenWidth, int levelnumber) {
 		this.root = new Group();
+		this.soundManager = SoundManager.getInstance();
 		this.scene = new Scene(root, screenWidth, screenHeight);
 		this.timeline = new Timeline();
-		this.levelConfig = new LevelConfiguration(1);
+		this.levelConfig = new LevelConfiguration(levelnumber);
 		UserPlaneFactory userFactory = new UserPlaneFactory(levelConfig.getPlayerInitialHealth());
 		this.user = userFactory.createUserPlane();
 		this.enemyFactory = new EnemyPlaneFactory();
@@ -82,7 +80,7 @@ public abstract class LevelParent {
 		this.heartSpawnProbability = levelConfig.getHeartSpawnProbability();
 		this.currentNumberOfEnemies = 0;
 		this.freezeSpawnProbability = levelConfig.getFreezeSpawnProbability();
-		this.multishotSpawnProbability = .0001;
+		this.multishotSpawnProbability = levelConfig.getMultishotSpawnProbability();
 		initializeTimeline();
 		friendlyUnits.add(user);
 		this.collisionManager = new CollisionManager(root, user, friendlyUnits, enemyUnits,
@@ -95,6 +93,10 @@ public abstract class LevelParent {
 	 */
 	public EnemyPlaneFactory getEnemyFactory() {
 		return enemyFactory;
+	}
+
+	protected void playLevelMusic(String music) {
+		soundManager.playBackgroundMusic(music);
 	}
 
 	protected abstract void initializeFriendlyUnits();
@@ -172,7 +174,6 @@ public abstract class LevelParent {
 		generateEnemyFire();
 		updateNumberOfEnemies();
 		collisionManager.handleGameCollisions();
-		handlePowerupCollisions();
 		removeDestroyedPowerups(powerups);
 		removeAllDestroyedActors();
 		updateKillCount();
@@ -180,20 +181,6 @@ public abstract class LevelParent {
 		checkIfGameOver();
 	}
 
-	public void handlePowerupCollisions(){
-		for (Powerup powerup : powerups){
-			if (powerup.getExactBounds().intersects(user.getExactBounds())){
-				powerup.activatePower(root, user);
-			}
-			else{
-				for (GameObject projectile : userProjectiles){
-					if (powerup.getExactBounds().intersects(projectile.getExactBounds()) && powerup.isShootable()) {
-						powerup.activatePower(root, user);
-					}
-				}
-			}
-		}
-	}
 
 	private void initializeTimeline() {
 		timeline.setCycleCount(Timeline.INDEFINITE);
@@ -206,17 +193,17 @@ public abstract class LevelParent {
 		background.setFitHeight(screenHeight);
 		background.setFitWidth(screenWidth);
 		background.setOnKeyPressed(e -> {
-            KeyCode kc = e.getCode();
-            if (kc == KeyCode.UP) user.moveUp();
-            if (kc == KeyCode.DOWN) user.moveDown();
-			if (kc == KeyCode.LEFT) user.moveLeft(); // Added horizontal movement functionality
-			if (kc == KeyCode.RIGHT) user.moveRight();
-            if (kc == KeyCode.SPACE) fireProjectile();
+            KeyCode keyCode = e.getCode();
+            if (keyCode == KeyCode.UP) user.moveUp();
+            if (keyCode == KeyCode.DOWN) user.moveDown();
+			if (keyCode == KeyCode.LEFT) user.moveLeft(); // Added horizontal movement functionality
+			if (keyCode == KeyCode.RIGHT) user.moveRight();
+            if (keyCode == KeyCode.SPACE) fireProjectile();
         });
 		background.setOnKeyReleased(e -> {
-            KeyCode kc = e.getCode();
-            if (kc == KeyCode.UP || kc == KeyCode.DOWN) user.stopVertical(); // split movement between horizontal and vertical
-			if (kc == KeyCode.LEFT || kc == KeyCode.RIGHT) user.stopHorizontal();
+            KeyCode keyCode = e.getCode();
+            if (keyCode == KeyCode.UP || keyCode == KeyCode.DOWN) user.stopVertical(); // split movement between horizontal and vertical
+			if (keyCode == KeyCode.LEFT || keyCode == KeyCode.RIGHT) user.stopHorizontal();
         });
 		root.getChildren().add(background);
 	}
@@ -233,7 +220,6 @@ public abstract class LevelParent {
 			userProjectiles.add(projectile);
 		}
 	}
-
 	/**
 	 * Modified to fire multishot if enabled
 	 */
@@ -249,6 +235,7 @@ public abstract class LevelParent {
 				userProjectiles.add(projectile);
 			}
 		}
+		soundManager.playShootSound();
 	}
 	/**
 	 * Spawns a heart if below the set spawn limit and the players health has decreased
@@ -257,7 +244,7 @@ public abstract class LevelParent {
 	private void updateHearts(){
 		if (powerups.size() < powerupLimit){
 			if (getUser().getHealth() < initialPlayerHealth) {
-				if (Math.random() < heartSpawnProbability) {
+				if (Math.random() < levelConfig.getHeartSpawnProbability()) {
 					Heart heart = new Heart(randomYposition());
 					root.getChildren().add(heart);
 					powerups.add(heart);
@@ -355,15 +342,16 @@ public abstract class LevelParent {
 		}
 	}
 
-
 	protected void winGame() {
 		timeline.stop();
-		levelView.showWinImage();
+		levelchange.accept("WIN");
+		soundManager.playWinSound();
 	}
 
 	protected void loseGame() {
 		timeline.stop();
-		levelView.showGameOverImage();
+		levelchange.accept("LOSE");
+		soundManager.playGameOverSound();
 	}
 
 	protected UserPlane getUser() {

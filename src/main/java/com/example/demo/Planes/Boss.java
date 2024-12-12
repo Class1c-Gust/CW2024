@@ -4,6 +4,7 @@ import com.example.demo.GameObject;
 import com.example.demo.Levels.LevelViewBossOne;
 import com.example.demo.Projectiles.BossMissile;
 import com.example.demo.Projectiles.BossProjectile;
+import com.example.demo.Managers.SoundManager;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
 
@@ -27,6 +28,7 @@ public class Boss extends FighterPlane {
     private boolean hasFiredMissile;
     private int missilesFired;
     private final DropShadow shieldGlowEffect;
+    private final SoundManager soundManager;
 
     public Boss(BossConfiguration config, LevelViewBossOne p_levelview, int levelNumber) {
         super(("bossplane" + (levelNumber / 3) + ".png"), IMAGE_HEIGHT, INITIAL_X_POSITION, INITIAL_Y_POSITION, config.getMaxHealth());
@@ -47,9 +49,10 @@ public class Boss extends FighterPlane {
         shieldGlowEffect.setColor(Color.RED); // Shield emits a red glow
         shieldGlowEffect.setRadius(30);
         shieldGlowEffect.setSpread(0.5);
+        this.soundManager = SoundManager.getInstance();
         initializeMovePattern();
-    }
 
+    }
     @Override
     public void updatePosition() {
         double initialTranslateY = getTranslateY();
@@ -70,12 +73,10 @@ public class Boss extends FighterPlane {
     public GameObject fireProjectile() {
         if (missileEnabled()){
             firedMissile();
+            soundManager.playMissileFiredSound();
             return new BossMissile(getProjectileInitialPosition());
         }
-        else {
-            return bossFiresInCurrentFrame() ? new BossProjectile(getProjectileInitialPosition()) : null;
-        }
-
+        return bossFiresInCurrentFrame() ? new BossProjectile(getProjectileInitialPosition()) : null;
     }
 
     private void firedMissile(){

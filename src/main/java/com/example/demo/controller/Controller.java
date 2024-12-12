@@ -2,7 +2,9 @@ package com.example.demo.controller;
 
 import java.lang.reflect.InvocationTargetException;
 
-import com.example.demo.MainMenu;
+import com.example.demo.screens.MainMenu;
+import com.example.demo.screens.GameWinScreen;
+import com.example.demo.screens.GameLoseScreen;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -16,6 +18,8 @@ public class Controller {
 	private static final String LEVEL_ONE_CLASS_NAME = "LEVEL_1";
 	private final Stage stage;
 	private MainMenu mainMenu;
+	private GameWinScreen winScreen;
+	private GameLoseScreen loseScreen;
 
 	public Controller(Stage stage) {
 		this.stage = stage;
@@ -48,7 +52,7 @@ public class Controller {
 	}
 
 /**
-Modified to use Levelfactory
+Modified to use LevelFactory
  **/
 	private void goToLevel(String className) throws ClassNotFoundException, NoSuchMethodException, SecurityException,
 			InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
@@ -61,6 +65,13 @@ Modified to use Levelfactory
 	}
 	private void levelChangeAttempt(String levelname) {
 		try {
+			if (levelname.equals("WIN")) {
+				showGameWin();
+				return;
+			} else if (levelname.equals("LOSE")) {
+				showGameLose();
+				return;
+			}
 			goToLevel(levelname);
 		} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException
 				 | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
@@ -68,6 +79,23 @@ Modified to use Levelfactory
 			alert.setContentText(e.getClass().toString());
 			alert.show();
 		}
+	}
+
+	public void showGameWin() {
+		if (winScreen == null) {
+			winScreen = new GameWinScreen(stage.getWidth(), stage.getHeight());
+			winScreen.setOnMainMenu(this::showMainMenu);
+		}
+		stage.setScene(winScreen.getScene());
+	}
+
+	public void showGameLose() {
+		if (loseScreen == null) {
+			loseScreen = new GameLoseScreen(stage.getWidth(), stage.getHeight());
+			loseScreen.setOnMainMenu(this::showMainMenu);
+			loseScreen.setOnRetry(() -> levelChangeAttempt(LEVEL_ONE_CLASS_NAME));
+		}
+		stage.setScene(loseScreen.getScene());
 	}
 
 }

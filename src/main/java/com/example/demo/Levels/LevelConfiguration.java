@@ -7,19 +7,21 @@ public class LevelConfiguration {
     private final int playerInitialHealth;
     private final double heartSpawnProbability;
     private final double freezeSpawnProbability;
+    private final double multishotSpawnProbability;
     private final int powerupLimit;
     private final double advancedEnemyProbability;
 
 
     public LevelConfiguration(int levelNumber) {
-        this.totalEnemies = 5 + (levelNumber);
+        this.totalEnemies = 2 + (levelNumber);
         this.killsToAdvance = 10 + (levelNumber * 2);
         this.enemySpawnProbability = 0.20 + (levelNumber * 0.01);
-        this.advancedEnemyProbability = (levelNumber * 0.0001);
+        this.advancedEnemyProbability = (levelNumber * 0.1);
         this.playerInitialHealth = 5;
-        this.heartSpawnProbability = 0.002 + (levelNumber * 0.0001);
-        this.freezeSpawnProbability = 0.02 + (levelNumber * 0.001);
-        this.powerupLimit = levelNumber - 1;
+        this.heartSpawnProbability = levelNumber * 0.0001;
+        this.freezeSpawnProbability = levelNumber * 0.0001;
+        this.multishotSpawnProbability = levelNumber * 0.0001;
+        this.powerupLimit = levelNumber-1;
     }
 
     public int getTotalEnemies() {
@@ -43,6 +45,10 @@ public class LevelConfiguration {
 
     public double getFreezeSpawnProbability() {
         return freezeSpawnProbability;
+    }
+
+    public double getMultishotSpawnProbability() {
+        return multishotSpawnProbability;
     }
 
     public double getHeartSpawnProbability() {

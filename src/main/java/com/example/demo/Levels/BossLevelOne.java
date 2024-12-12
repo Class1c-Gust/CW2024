@@ -2,6 +2,7 @@ package com.example.demo.Levels;
 
 import com.example.demo.Planes.Boss;
 import com.example.demo.Planes.BossFactory;
+import com.example.demo.Managers.SoundManager;
 
 /**
  * Class representing the first boss level
@@ -17,11 +18,17 @@ public class BossLevelOne extends LevelParent {
 	private LevelViewBossOne levelView;
 	private final int levelNumber;
 	private final LevelConfiguration levelConfig;
+	private final SoundManager soundManager;
+	private String musicFile;
+
 	public BossLevelOne(double screenHeight, double screenWidth, int levelNumber) {
-		super(BACKGROUND_IMAGE_NAME, screenHeight, screenWidth);
+		super(BACKGROUND_IMAGE_NAME, screenHeight, screenWidth, levelNumber);
 		boss = BossFactory.createBoss(levelNumber, levelView);
 		this.levelNumber = levelNumber;
 		this.levelConfig = new LevelConfiguration(levelNumber);
+		this.soundManager = SoundManager.getInstance();
+		this.musicFile = soundManager.getLevelMusic(levelNumber);
+		playLevelMusic(musicFile);
 	}
 
 	@Override
@@ -32,9 +39,15 @@ public class BossLevelOne extends LevelParent {
 	@Override
 	protected void checkIfGameOver() {
 		if (userIsDestroyed()) {
+			soundManager.stopBackgroundMusic();
 			loseGame();
 		}
 		else if (boss.isDestroyed()) {
+			if (levelNumber == 9){
+				winGame();
+			}
+			soundManager.stopBackgroundMusic();
+			soundManager.playLevelUpSound();
 			goToNextLevel("LEVEL_" + (levelNumber+1));
 		}
 	}
