@@ -13,14 +13,14 @@ public class LevelConfiguration {
 
 
     public LevelConfiguration(int levelNumber) {
-        this.totalEnemies = 2 + (levelNumber);
-        this.killsToAdvance = 10 + (levelNumber * 2);
-        this.enemySpawnProbability = 0.20 + (levelNumber * 0.01);
-        this.advancedEnemyProbability = (levelNumber * 0.1);
+        this.totalEnemies = 1 + (levelNumber);
+        this.killsToAdvance = 12 + (levelNumber * 2);
+        this.enemySpawnProbability = 0.12 + (levelNumber * 0.01);
+        this.advancedEnemyProbability = (levelNumber * 0.0040);
         this.playerInitialHealth = 5;
         this.heartSpawnProbability = levelNumber * 0.0001;
-        this.freezeSpawnProbability = levelNumber * 0.0001;
-        this.multishotSpawnProbability = levelNumber * 0.0001;
+        this.freezeSpawnProbability = levelNumber * 0.0003;
+        this.multishotSpawnProbability = levelNumber * 0.00001;
         this.powerupLimit = levelNumber-1;
     }
 

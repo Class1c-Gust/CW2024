@@ -14,22 +14,37 @@ import com.example.demo.Levels.LevelFactory;
 
 public class Controller {
 
-//	private static final String LEVEL_ONE_CLASS_NAME = "com.example.demo.Levels.LevelOne";
+	//	private static final String LEVEL_ONE_CLASS_NAME = "com.example.demo.Levels.LevelOne";
 	private static final String LEVEL_ONE_CLASS_NAME = "LEVEL_1";
 	private final Stage stage;
 	private MainMenu mainMenu;
 	private GameWinScreen winScreen;
 	private GameLoseScreen loseScreen;
 
+	/**
+	 *
+	 * @param stage
+	 */
+	/**
+	 * Initializes the controller with the specified stage.
+	 *
+	 * @param stage the primary stage of the application
+	 */
 	public Controller(Stage stage) {
 		this.stage = stage;
 	}
 
+	/**
+	 * Launches the game by displaying the main menu and showing the stage.
+	 */
 	public void launchGame() {
 		showMainMenu();
 		stage.show();
 	}
 
+	/**
+	 * Displays the main menu scene, initializing it if necessary.
+	 */
 	private void showMainMenu() {
 		if (mainMenu == null) {
 			mainMenu = new MainMenu(stage.getWidth(), stage.getHeight());
@@ -44,6 +59,11 @@ public class Controller {
 		stage.setScene(mainMenu.getScene());
 	}
 
+	/**
+	 * Displays an error message in an alert dialog.
+	 *
+	 * @param e the exception to display
+	 */
 	private void showError(Exception e) {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle("Error");
@@ -51,18 +71,32 @@ public class Controller {
 		alert.show();
 	}
 
-/**
-Modified to use LevelFactory
- **/
+	/**
+	 * Navigates to a specified level by class name and starts the game.
+	 *
+	 * @param className the fully qualified class name of the level
+	 * @throws ClassNotFoundException    if the class cannot be found
+	 * @throws NoSuchMethodException     if a required method is missing
+	 * @throws SecurityException         if a security violation occurs
+	 * @throws InstantiationException    if the level class cannot be instantiated
+	 * @throws IllegalAccessException    if the level class or constructor is inaccessible
+	 * @throws IllegalArgumentException  if an illegal argument is passed
+	 * @throws InvocationTargetException if the constructor throws an exception
+	 */
 	private void goToLevel(String className) throws ClassNotFoundException, NoSuchMethodException, SecurityException,
 			InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-			LevelParent myLevel = LevelFactory.createLevel(className, stage.getHeight(), stage.getWidth());
-			myLevel.levelChangeStatus(this::levelChangeAttempt);
-			Scene scene = myLevel.initializeScene();
-			stage.setScene(scene);
-			myLevel.startGame();
-
+		LevelParent myLevel = LevelFactory.createLevel(className, stage.getHeight(), stage.getWidth());
+		myLevel.levelChangeStatus(this::levelChangeAttempt);
+		Scene scene = myLevel.initializeScene();
+		stage.setScene(scene);
+		myLevel.startGame();
 	}
+
+	/**
+	 * Attempts to change the level, handling win, lose, or level transitions.
+	 *
+	 * @param levelname the name of the level or game status
+	 */
 	private void levelChangeAttempt(String levelname) {
 		try {
 			if (levelname.equals("WIN")) {
@@ -81,6 +115,9 @@ Modified to use LevelFactory
 		}
 	}
 
+	/**
+	 * Displays the game win screen, initializing it if necessary.
+	 */
 	public void showGameWin() {
 		if (winScreen == null) {
 			winScreen = new GameWinScreen(stage.getWidth(), stage.getHeight());
@@ -89,6 +126,9 @@ Modified to use LevelFactory
 		stage.setScene(winScreen.getScene());
 	}
 
+	/**
+	 * Displays the game lose screen, initializing it if necessary.
+	 */
 	public void showGameLose() {
 		if (loseScreen == null) {
 			loseScreen = new GameLoseScreen(stage.getWidth(), stage.getHeight());
@@ -97,5 +137,4 @@ Modified to use LevelFactory
 		}
 		stage.setScene(loseScreen.getScene());
 	}
-
 }

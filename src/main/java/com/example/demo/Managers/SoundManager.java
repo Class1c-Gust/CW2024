@@ -21,6 +21,7 @@ public class SoundManager {
     public static final String GAME_OVER_MUSIC = "/Audio/gameOver.mp3";
     public static final String WIN_GAME_MUSIC = "/Audio/level9music.mp3";
     public static final String SHOOT_SOUND = "/Audio/gunshot.mp3";
+    public static final String BOSS_SHOOT_SOUND = "/Audio/bossshoot.mp3";
     public static final String CRASH_SOUND = "/Audio/healthDecrease.mp3";
     public static final String LEVEL_UP = "/Audio/levelup.mp3";
     public static final String MISSILE_FIRE = "/Audio/missilefire.mp3";
@@ -37,6 +38,7 @@ public class SoundManager {
     private AudioClip killSound;
     private AudioClip gameOverSound;
     private AudioClip wonGameSound;
+    private AudioClip bossSound;
 
     private static final double VOLUME = 0.2;
     private boolean SoundMuted = false;
@@ -75,6 +77,7 @@ public class SoundManager {
         levelupSound = loadAudioClip(LEVEL_UP);
         gameOverSound = loadAudioClip(GAME_OVER_MUSIC);
         wonGameSound = loadAudioClip(WIN_GAME_MUSIC);
+        bossSound = loadAudioClip(BOSS_SHOOT_SOUND);
 
     }
 
@@ -125,9 +128,9 @@ public class SoundManager {
         }
     }
 
-    public void playkillSound() {
-        if (!SoundMuted && killSound != null) {
-            killSound.play();
+    public void playBossSound() {
+        if (!SoundMuted && bossSound != null) {
+            bossSound.play();
         }
     }
 

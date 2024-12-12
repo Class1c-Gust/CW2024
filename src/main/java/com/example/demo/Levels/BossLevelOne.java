@@ -11,21 +11,16 @@ public class BossLevelOne extends LevelParent {
 
 	private static final String BACKGROUND_IMAGE_NAME = "/com/example/demo/images/background2.jpg";
 	private static final int PLAYER_INITIAL_HEALTH = 5;
-	private static final double HEART_SPAWN_PROBABILITY = .002;
-	private static final double FREEZE_SPAWN_PROBABILITY = .002;
-	private static final int HEART_SPAWN_LIMIT = 3;
 	private final Boss boss;
 	private LevelViewBossOne levelView;
 	private final int levelNumber;
-	private final LevelConfiguration levelConfig;
 	private final SoundManager soundManager;
 	private String musicFile;
 
 	public BossLevelOne(double screenHeight, double screenWidth, int levelNumber) {
-		super(BACKGROUND_IMAGE_NAME, screenHeight, screenWidth, levelNumber);
+		super(screenHeight, screenWidth, levelNumber);
 		boss = BossFactory.createBoss(levelNumber, levelView);
 		this.levelNumber = levelNumber;
-		this.levelConfig = new LevelConfiguration(levelNumber);
 		this.soundManager = SoundManager.getInstance();
 		this.musicFile = soundManager.getLevelMusic(levelNumber);
 		playLevelMusic(musicFile);
@@ -43,12 +38,14 @@ public class BossLevelOne extends LevelParent {
 			loseGame();
 		}
 		else if (boss.isDestroyed()) {
+			soundManager.stopBackgroundMusic();
 			if (levelNumber == 9){
 				winGame();
 			}
-			soundManager.stopBackgroundMusic();
-			soundManager.playLevelUpSound();
-			goToNextLevel("LEVEL_" + (levelNumber+1));
+			else{
+				soundManager.playLevelUpSound();
+				goToNextLevel("LEVEL_" + (levelNumber+1));
+			}
 		}
 	}
 

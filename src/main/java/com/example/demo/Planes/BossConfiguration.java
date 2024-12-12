@@ -19,7 +19,7 @@ public class BossConfiguration {
     public BossConfiguration(int level) {
         this.level = level;
         this.maxHealth = 1 + (level * 2);
-        this.fireRate = 0.009 + (level * 0.01);
+        this.fireRate = 0.001 + (level * 0.0001);
         this.shieldProbability = 0.002 + (level * 0.0005);
         this.moveFrequency = 5 + level;
         this.projectileSpeed = 5 + (level * 0.5);

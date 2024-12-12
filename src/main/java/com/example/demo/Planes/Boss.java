@@ -5,6 +5,7 @@ import com.example.demo.Levels.LevelViewBossOne;
 import com.example.demo.Projectiles.BossMissile;
 import com.example.demo.Projectiles.BossProjectile;
 import com.example.demo.Managers.SoundManager;
+import com.example.demo.config.Config;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
 
@@ -14,6 +15,8 @@ public class Boss extends FighterPlane {
 
     private static final double INITIAL_X_POSITION = 1000.0;
     private static final double INITIAL_Y_POSITION = 400;
+    private static final double Y_UPPER_BOUND = Config.Player.Y_UPPER_BOUND;
+    private static final double Y_LOWER_BOUND = Config.Player.Y_LOWER_BOUND;
     private static final double PROJECTILE_Y_POSITION_OFFSET = 75.0;
     private static final int IMAGE_HEIGHT = 200;
     private final BossConfiguration config;
@@ -58,7 +61,7 @@ public class Boss extends FighterPlane {
         double initialTranslateY = getTranslateY();
         moveVertically(getNextMove());
         currentPosition = getLayoutY() + getTranslateY();
-        if (currentPosition < -100 || currentPosition > 475) {
+        if (currentPosition < Y_UPPER_BOUND || currentPosition > Y_LOWER_BOUND) {
             setTranslateY(initialTranslateY);
         }
     }
@@ -76,7 +79,13 @@ public class Boss extends FighterPlane {
             soundManager.playMissileFiredSound();
             return new BossMissile(getProjectileInitialPosition());
         }
-        return bossFiresInCurrentFrame() ? new BossProjectile(getProjectileInitialPosition()) : null;
+        else if (bossFiresInCurrentFrame()){
+            soundManager.playBossSound();
+            return new BossProjectile(getProjectileInitialPosition());
+        }
+        else{
+            return null;
+        }
     }
 
     private void firedMissile(){

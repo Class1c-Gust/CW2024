@@ -5,6 +5,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Text;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
@@ -18,6 +19,7 @@ public class MainMenu extends MenuScreen{
     private static final String MENU_BACKGROUND_IMAGE = "/com/example/demo/images/background1.jpg";
     private Runnable onStart;
     private final SoundManager soundManager;
+    private MediaPlayer mediaPlayer;
 
     public MainMenu(double width, double height) {
         super(width, height, MENU_BACKGROUND_IMAGE);

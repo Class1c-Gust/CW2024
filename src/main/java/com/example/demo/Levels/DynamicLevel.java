@@ -9,8 +9,7 @@ public class DynamicLevel extends LevelParent {
     private final SoundManager soundManager;
     private String musicFile;
     public DynamicLevel(double screenHeight, double screenWidth, int levelNumber) {
-        super("/com/example/demo/images/background" + (levelNumber) + ".jpg",
-                screenHeight, screenWidth, levelNumber);
+        super(screenHeight, screenWidth, levelNumber);
         this.levelNumber = levelNumber;
         this.config = new LevelConfiguration(levelNumber);
         this.soundManager = SoundManager.getInstance();

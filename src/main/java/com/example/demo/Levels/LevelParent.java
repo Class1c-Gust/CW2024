@@ -51,16 +51,18 @@ public abstract class LevelParent {
 	private final double freezeSpawnProbability;
 	private final double multishotSpawnProbability;
 	private final int powerupLimit;
+	private int levelnumber;
 	private Consumer<String> levelchange;
 	private final EnemyPlaneFactory enemyFactory;
 	private final CollisionManager collisionManager;
 	private final LevelConfiguration levelConfig;
 
-	public LevelParent(String backgroundImageName, double screenHeight, double screenWidth, int levelnumber) {
+	public LevelParent(double screenHeight, double screenWidth, int levelnumber) {
 		this.root = new Group();
 		this.soundManager = SoundManager.getInstance();
 		this.scene = new Scene(root, screenWidth, screenHeight);
 		this.timeline = new Timeline();
+		this.levelnumber = levelnumber;
 		this.levelConfig = new LevelConfiguration(levelnumber);
 		UserPlaneFactory userFactory = new UserPlaneFactory(levelConfig.getPlayerInitialHealth());
 		this.user = userFactory.createUserPlane();
@@ -70,7 +72,7 @@ public abstract class LevelParent {
 		this.powerups = new ArrayList<>();
 		this.userProjectiles = new ArrayList<>();
 		this.enemyProjectiles = new ArrayList<>();
-		this.background = new ImageView(new Image(Objects.requireNonNull(getClass().getResource(backgroundImageName)).toExternalForm()));
+		this.background = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("/com/example/demo/images/background" + (levelnumber) + ".jpg")).toExternalForm()));
 		this.screenHeight = screenHeight;
 		this.screenWidth = screenWidth;
 		this.enemyMaximumYPosition = screenHeight - SCREEN_HEIGHT_ADJUSTMENT;
@@ -108,7 +110,7 @@ public abstract class LevelParent {
 	protected abstract LevelView instantiateLevelView();
 
 	public Scene initializeScene() {
-		initializeBackground();
+		initializeBackground(false);
 		initializeFriendlyUnits();
 		levelView.showHeartDisplay();
 		return scene;
@@ -161,7 +163,7 @@ public abstract class LevelParent {
 	 */
 	private void resetScreen(){
 		this.root.getChildren().clear();
-		initializeBackground();
+		initializeBackground(true);
 
 	}
 
@@ -188,7 +190,7 @@ public abstract class LevelParent {
 		timeline.getKeyFrames().add(gameLoop);
 	}
 
-	private void initializeBackground() {
+	private void initializeBackground(boolean transitionedNextLevel) {
 		background.setFocusTraversable(true);
 		background.setFitHeight(screenHeight);
 		background.setFitWidth(screenWidth);
@@ -198,7 +200,7 @@ public abstract class LevelParent {
             if (keyCode == KeyCode.DOWN) user.moveDown();
 			if (keyCode == KeyCode.LEFT) user.moveLeft(); // Added horizontal movement functionality
 			if (keyCode == KeyCode.RIGHT) user.moveRight();
-            if (keyCode == KeyCode.SPACE) fireProjectile();
+            if (keyCode == KeyCode.SPACE && !transitionedNextLevel) fireProjectile();
         });
 		background.setOnKeyReleased(e -> {
             KeyCode keyCode = e.getCode();
@@ -279,7 +281,7 @@ public abstract class LevelParent {
 
 	}
 
-	private double randomYposition(){return (60 + ((Math.random() * this.screenHeight-100)));}
+	private double randomYposition(){return 100 + (Math.random() * (this.screenHeight - 200));}
 
 	private void generateEnemyFire() {
 		enemyUnits.forEach(enemy -> spawnEnemyProjectile(((FighterPlane) enemy).fireProjectile()));
