@@ -2,24 +2,23 @@ package com.example.demo.Powerups;
 
 import com.example.demo.Planes.UserPlane;
 import com.example.demo.Projectiles.Projectile;
+import com.example.demo.config.Config;
 import javafx.scene.Group;
 
 /**
  * Super class for power up functionality
  */
 public abstract class Powerup extends Projectile {
-    private static final int HORIZONTAL_VELOCITY = -10;
-    private static final int INITIAL_X_POSITION = 1300;
     private final boolean shootable;
 
     public Powerup(String imageName, int imageHeight, double initialYPos, boolean shootable) {
-        super(imageName, imageHeight, INITIAL_X_POSITION, initialYPos);
+        super(imageName, imageHeight, Config.Powerup.INITIAL_X_POSITION, initialYPos);
         this.shootable = shootable;
     }
 
     @Override
     public void updatePosition() {
-        moveHorizontally(HORIZONTAL_VELOCITY);
+        moveHorizontally(Config.Powerup.HORIZONTAL_VELOCITY);
     }
 
     @Override

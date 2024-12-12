@@ -1,5 +1,6 @@
 package com.example.demo.Managers;
 
+import com.example.demo.config.Config;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -7,26 +8,6 @@ import javafx.scene.media.MediaPlayer;
 import java.net.URL;
 
 public class SoundManager {
-    // Audio file paths
-    public static final String MENU_MUSIC = "/Audio/menu.mp3";
-    public static final String LEVEL_ONE_MUSIC = "/Audio/level1music.mp3";
-    public static final String LEVEL_TWO_MUSIC = "/Audio/level2music.mp3";
-    public static final String LEVEL_THREE_MUSIC = "/Audio/level3music.mp3";
-    public static final String LEVEL_FOUR_MUSIC = "/Audio/level4music.mp3";
-    public static final String LEVEL_FIVE_MUSIC = "/Audio/level5music.mp3";
-    public static final String LEVEL_SIX_MUSIC = "/Audio/level6music.mp3";
-    public static final String LEVEL_SEVEN_MUSIC = "/Audio/level7music.mp3";
-    public static final String LEVEL_EIGHT_MUSIC = "/Audio/level8music.mp3";
-    public static final String LEVEL_NINE_MUSIC = "/Audio/level9music.mp3";
-    public static final String GAME_OVER_MUSIC = "/Audio/gameOver.mp3";
-    public static final String WIN_GAME_MUSIC = "/Audio/level9music.mp3";
-    public static final String SHOOT_SOUND = "/Audio/gunshot.mp3";
-    public static final String BOSS_SHOOT_SOUND = "/Audio/bossshoot.mp3";
-    public static final String CRASH_SOUND = "/Audio/healthDecrease.mp3";
-    public static final String LEVEL_UP = "/Audio/levelup.mp3";
-    public static final String MISSILE_FIRE = "/Audio/missilefire.mp3";
-    public static final String POWER_UP = "/Audio/powerup.mp3";
-    public static final String KILL = "/Audio/kill.mp3";
 
     private static SoundManager instance; // Singleton instance
     private MediaPlayer mediaplayer;
@@ -35,30 +16,24 @@ public class SoundManager {
     private AudioClip missilefiredSound;
     private AudioClip levelupSound;
     private AudioClip powerupSound;
-    private AudioClip killSound;
     private AudioClip gameOverSound;
     private AudioClip wonGameSound;
     private AudioClip bossSound;
 
-    private static final double VOLUME = 0.2;
     private boolean SoundMuted = false;
     private boolean BackgroundMusicMuted = false;
 
-    public static final String[] LEVEL_MUSIC = {
-            LEVEL_ONE_MUSIC, LEVEL_TWO_MUSIC, LEVEL_THREE_MUSIC, LEVEL_FOUR_MUSIC, LEVEL_FIVE_MUSIC,
-            LEVEL_SIX_MUSIC, LEVEL_SEVEN_MUSIC, LEVEL_EIGHT_MUSIC, LEVEL_NINE_MUSIC
-    };
 
     private SoundManager() {
         initializeSoundEffects();
     }
 
     public String getLevelMusic(int levelNumber){
-        return SoundManager.LEVEL_MUSIC[levelNumber-1];
+        return Config.Audio.LEVEL_MUSIC[levelNumber-1];
     }
 
     public String getMenuMusic(){
-        return SoundManager.MENU_MUSIC;
+        return Config.Audio.MENU_MUSIC;
     }
 
     public static SoundManager getInstance() {
@@ -69,15 +44,14 @@ public class SoundManager {
     }
 
     private void initializeSoundEffects() {
-        shootingSound = loadAudioClip(SHOOT_SOUND);
-        crashSound = loadAudioClip(CRASH_SOUND);
+        shootingSound = loadAudioClip(Config.Audio.SHOOT_SOUND);
+        crashSound = loadAudioClip(Config.Audio.CRASH_SOUND);
         crashSound.setVolume(0.7);
-        missilefiredSound = loadAudioClip(MISSILE_FIRE);
-        powerupSound = loadAudioClip(POWER_UP);
-        levelupSound = loadAudioClip(LEVEL_UP);
-        gameOverSound = loadAudioClip(GAME_OVER_MUSIC);
-        wonGameSound = loadAudioClip(WIN_GAME_MUSIC);
-        bossSound = loadAudioClip(BOSS_SHOOT_SOUND);
+        missilefiredSound = loadAudioClip(Config.Audio.MISSILE_FIRE);
+        powerupSound = loadAudioClip(Config.Audio.POWER_UP);
+        levelupSound = loadAudioClip(Config.Audio.LEVEL_UP);
+        gameOverSound = loadAudioClip(Config.Audio.GAME_OVER_MUSIC);
+        bossSound = loadAudioClip(Config.Audio.BOSS_SHOOT_SOUND);
 
     }
 
@@ -87,7 +61,7 @@ public class SoundManager {
             mediaplayer = createMediaPlayer(audioFilePath);
             if (mediaplayer != null) {
                 mediaplayer.setCycleCount(MediaPlayer.INDEFINITE);
-                mediaplayer.setVolume(BackgroundMusicMuted ? 0 : VOLUME);
+                mediaplayer.setVolume(BackgroundMusicMuted ? 0 : Config.Audio.VOLUME);
                 if (!BackgroundMusicMuted) {
                     mediaplayer.play();
                 }
@@ -134,11 +108,6 @@ public class SoundManager {
         }
     }
 
-    public void playWinSound() {
-        if (!SoundMuted && wonGameSound != null) {
-            wonGameSound.play();
-        }
-    }
 
     public void playGameOverSound() {
         if (!SoundMuted && gameOverSound != null) {
@@ -176,7 +145,7 @@ public class SoundManager {
                 throw new IllegalArgumentException("Audio file not found: " + filePath);
             }
             AudioClip audioClip = new AudioClip(resource.toExternalForm());
-            audioClip.setVolume(VOLUME);
+            audioClip.setVolume(Config.Audio.VOLUME);
             return audioClip;
         } catch (Exception e) {
             System.err.println("Error loading audio: " + filePath + " - " + e.getMessage());
@@ -208,7 +177,7 @@ public class SoundManager {
     public void unmuteBackgroundMusic(String currentMusicFile) {
         BackgroundMusicMuted = false;
         if (mediaplayer != null) {
-            mediaplayer.setVolume(VOLUME);
+            mediaplayer.setVolume(Config.Audio.VOLUME);
             if (mediaplayer.getStatus() != MediaPlayer.Status.PLAYING) {
                 mediaplayer.play();
             }

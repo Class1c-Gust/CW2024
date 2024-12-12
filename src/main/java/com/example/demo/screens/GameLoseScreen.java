@@ -1,5 +1,7 @@
 package com.example.demo.screens;
 
+import com.example.demo.Managers.SoundManager;
+import com.example.demo.config.Config;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
@@ -11,12 +13,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.effect.DropShadow;
 
 public class GameLoseScreen extends MenuScreen {
-    private static final String LOSE_BACKGROUND = "/com/example/demo/images/background13.jpg";
     private Runnable onMainMenu;
     private Runnable onRetry;
     
     public GameLoseScreen(double width, double height) {
-        super(width, height, LOSE_BACKGROUND);
+        super(width, height, Config.Game.LOSE_BACKGROUND);
         createScreen();
     }
     
@@ -35,11 +36,15 @@ public class GameLoseScreen extends MenuScreen {
         
         Button retryButton = createStyledButton("Retry");
         Button mainMenuButton = createStyledButton("Main Menu");
+
+        disableButtonDefaultKeyBehavior(mainMenuButton);
+        disableButtonDefaultKeyBehavior(retryButton);
         
         retryButton.setOnAction(e -> {
             if (onRetry != null) onRetry.run();
         });
         mainMenuButton.setOnAction(e -> {
+            soundManager.playBackgroundMusic(soundManager.getMenuMusic());
             if (onMainMenu != null) onMainMenu.run();
         });
         

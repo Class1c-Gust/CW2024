@@ -14,6 +14,7 @@ import com.example.demo.Powerups.Freeze;
 import com.example.demo.Powerups.Powerup;
 import com.example.demo.Powerups.Heart;
 import com.example.demo.Powerups.Multishot;
+import com.example.demo.config.Config;
 import javafx.animation.*;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -24,19 +25,15 @@ import javafx.util.Duration;
 import javafx.scene.control.Label;
 
 public abstract class LevelParent {
-
-	private static final double SCREEN_HEIGHT_ADJUSTMENT = 150;
-	private static final double MILLISECOND_DELAY = 16.67;
 	private final double screenHeight;
 	private final double screenWidth;
 	private final double enemyMaximumYPosition;
-
 	private final Group root;
 	private final Timeline timeline;
 	private final UserPlane user;
 	private final Scene scene;
 	private final ImageView background;
-	private final LevelView levelView;
+	private final HeartBar levelView;
 	private final SoundManager soundManager;
 
 	private final List<GameObject> friendlyUnits;
@@ -46,10 +43,6 @@ public abstract class LevelParent {
 	private final List<Powerup> powerups;
 	
 	private int currentNumberOfEnemies;
-	private final int initialPlayerHealth;
-	private final double heartSpawnProbability;
-	private final double freezeSpawnProbability;
-	private final double multishotSpawnProbability;
 	private final int powerupLimit;
 	private int levelnumber;
 	private Consumer<String> levelchange;
@@ -72,17 +65,14 @@ public abstract class LevelParent {
 		this.powerups = new ArrayList<>();
 		this.userProjectiles = new ArrayList<>();
 		this.enemyProjectiles = new ArrayList<>();
-		this.background = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("/com/example/demo/images/background" + (levelnumber) + ".jpg")).toExternalForm()));
+		this.background = new ImageView(new Image(Objects.requireNonNull(getClass().getResource(
+				Config.Level.BACKGROUND_PATH + (levelnumber) + ".jpg")).toExternalForm()));
 		this.screenHeight = screenHeight;
 		this.screenWidth = screenWidth;
-		this.enemyMaximumYPosition = screenHeight - SCREEN_HEIGHT_ADJUSTMENT;
+		this.enemyMaximumYPosition = screenHeight - Config.Screen.SCREEN_HEIGHT_ADJUSTMENT;
 		this.levelView = instantiateLevelView();
-		this.initialPlayerHealth = levelConfig.getPlayerInitialHealth();
 		this.powerupLimit = levelConfig.getPowerupLimit();
-		this.heartSpawnProbability = levelConfig.getHeartSpawnProbability();
 		this.currentNumberOfEnemies = 0;
-		this.freezeSpawnProbability = levelConfig.getFreezeSpawnProbability();
-		this.multishotSpawnProbability = levelConfig.getMultishotSpawnProbability();
 		initializeTimeline();
 		friendlyUnits.add(user);
 		this.collisionManager = new CollisionManager(root, user, friendlyUnits, enemyUnits,
@@ -107,7 +97,7 @@ public abstract class LevelParent {
 
 	protected abstract void spawnEnemyUnits();
 
-	protected abstract LevelView instantiateLevelView();
+	protected abstract HeartBar instantiateLevelView();
 
 	public Scene initializeScene() {
 		initializeBackground(false);
@@ -186,7 +176,7 @@ public abstract class LevelParent {
 
 	private void initializeTimeline() {
 		timeline.setCycleCount(Timeline.INDEFINITE);
-		KeyFrame gameLoop = new KeyFrame(Duration.millis(MILLISECOND_DELAY), e -> updateScene());
+		KeyFrame gameLoop = new KeyFrame(Duration.millis(Config.Screen.MILLISECOND_DELAY), e -> updateScene());
 		timeline.getKeyFrames().add(gameLoop);
 	}
 
@@ -245,7 +235,7 @@ public abstract class LevelParent {
 	 */
 	private void updateHearts(){
 		if (powerups.size() < powerupLimit){
-			if (getUser().getHealth() < initialPlayerHealth) {
+			if (getUser().getHealth() < levelConfig.getPlayerInitialHealth()) {
 				if (Math.random() < levelConfig.getHeartSpawnProbability()) {
 					Heart heart = new Heart(randomYposition());
 					root.getChildren().add(heart);
@@ -261,7 +251,7 @@ public abstract class LevelParent {
 	 */
 	private void updateMultishot(){
 		if (powerups.size() < powerupLimit){
-			if (Math.random() < multishotSpawnProbability){
+			if (Math.random() < levelConfig.getMultishotSpawnProbability()){
 				Multishot multiShotIcon = new Multishot(randomYposition());
 				root.getChildren().add(multiShotIcon);
 				powerups.add(multiShotIcon);
@@ -273,7 +263,7 @@ public abstract class LevelParent {
 	 * Creates freeze powerup if probability is met and adds it to the powerup list
 	 */
 	private void updateFreezeSpawn(){
-		if (Math.random() < freezeSpawnProbability && powerups.size() < powerupLimit){
+		if (Math.random() < levelConfig.getFreezeSpawnProbability() && powerups.size() < powerupLimit){
 			Freeze freeze = new Freeze(randomYposition());
 			root.getChildren().add(freeze);
 			powerups.add(freeze);
@@ -347,7 +337,6 @@ public abstract class LevelParent {
 	protected void winGame() {
 		timeline.stop();
 		levelchange.accept("WIN");
-		soundManager.playWinSound();
 	}
 
 	protected void loseGame() {

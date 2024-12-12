@@ -2,17 +2,16 @@ package com.example.demo.Planes;
 
 import com.example.demo.GameObject;
 import com.example.demo.Levels.LevelConfiguration;
+import com.example.demo.config.Config;
 
 /** Subclass of "PlaneFactory" class
  * To create EnemyPlane products
  */
 public class EnemyPlaneFactory extends PlaneFactory {
-    private static final int ENEMY_HEIGHT = 150;
-    private static final int DEFAULT_HEALTH = 1;
 
     public enum EnemyType {
-        NORMAL("enemyplane.png", -6, 0.001),
-        FAST("enemyplane2.png", -9, 0.003);
+        NORMAL(Config.Enemy.NORMAL_IMAGE, -6, 0.001),
+        FAST(Config.Enemy.FAST_IMAGE, -9, 0.003);
 
         private final String image;
         private final int speed;
@@ -26,7 +25,7 @@ public class EnemyPlaneFactory extends PlaneFactory {
     }
 
     public EnemyPlaneFactory() {
-        super("enemyplane.png", ENEMY_HEIGHT, DEFAULT_HEALTH);
+        super("enemyplane.png", Config.Enemy.IMAGE_HEIGHT, Config.Enemy.INITIAL_HEALTH);
     }
 
     @Override

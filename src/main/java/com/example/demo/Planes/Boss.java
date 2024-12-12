@@ -12,13 +12,6 @@ import javafx.scene.paint.Color;
 import java.util.*;
 
 public class Boss extends FighterPlane {
-
-    private static final double INITIAL_X_POSITION = 1000.0;
-    private static final double INITIAL_Y_POSITION = 400;
-    private static final double Y_UPPER_BOUND = Config.Player.Y_UPPER_BOUND;
-    private static final double Y_LOWER_BOUND = Config.Player.Y_LOWER_BOUND;
-    private static final double PROJECTILE_Y_POSITION_OFFSET = 75.0;
-    private static final int IMAGE_HEIGHT = 200;
     private final BossConfiguration config;
     private final LevelViewBossOne levelview;
     private final List<Integer> movePattern;
@@ -34,7 +27,8 @@ public class Boss extends FighterPlane {
     private final SoundManager soundManager;
 
     public Boss(BossConfiguration config, LevelViewBossOne p_levelview, int levelNumber) {
-        super(("bossplane" + (levelNumber / 3) + ".png"), IMAGE_HEIGHT, INITIAL_X_POSITION, INITIAL_Y_POSITION, config.getMaxHealth());
+        super(("bossplane" + (levelNumber / 3) + ".png"), Config.Boss.IMAGE_HEIGHT, Config.Boss.INITIAL_X_POSITION,
+                Config.Boss.INITIAL_Y_POSITION, config.getMaxHealth());
         this.setFitWidth(300);
         this.setFitHeight(200);
         this.config = config;
@@ -61,7 +55,7 @@ public class Boss extends FighterPlane {
         double initialTranslateY = getTranslateY();
         moveVertically(getNextMove());
         currentPosition = getLayoutY() + getTranslateY();
-        if (currentPosition < Y_UPPER_BOUND || currentPosition > Y_LOWER_BOUND) {
+        if (currentPosition < Config.Player.Y_UPPER_BOUND || currentPosition > Config.Player.Y_LOWER_BOUND) {
             setTranslateY(initialTranslateY);
         }
     }
@@ -138,7 +132,7 @@ public class Boss extends FighterPlane {
     }
 
     private double getProjectileInitialPosition() {
-        return getLayoutY() + getTranslateY() + PROJECTILE_Y_POSITION_OFFSET;
+        return getLayoutY() + getTranslateY() + Config.Boss.PROJECTILE_Y_POSITION_OFFSET;
     }
 
     private boolean shieldShouldBeActivated() {

@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import java.lang.reflect.InvocationTargetException;
 
+import com.example.demo.config.Config;
 import com.example.demo.screens.MainMenu;
 import com.example.demo.screens.GameWinScreen;
 import com.example.demo.screens.GameLoseScreen;
@@ -15,7 +16,6 @@ import com.example.demo.Levels.LevelFactory;
 public class Controller {
 
 	//	private static final String LEVEL_ONE_CLASS_NAME = "com.example.demo.Levels.LevelOne";
-	private static final String LEVEL_ONE_CLASS_NAME = "LEVEL_1";
 	private final Stage stage;
 	private MainMenu mainMenu;
 	private GameWinScreen winScreen;
@@ -50,7 +50,7 @@ public class Controller {
 			mainMenu = new MainMenu(stage.getWidth(), stage.getHeight());
 			mainMenu.setOnStart(() -> {
 				try {
-					goToLevel(LEVEL_ONE_CLASS_NAME);
+					goToLevel(Config.Level.LEVEL_ONE_CLASS_NAME);
 				} catch (Exception e) {
 					showError(e);
 				}
@@ -133,7 +133,7 @@ public class Controller {
 		if (loseScreen == null) {
 			loseScreen = new GameLoseScreen(stage.getWidth(), stage.getHeight());
 			loseScreen.setOnMainMenu(this::showMainMenu);
-			loseScreen.setOnRetry(() -> levelChangeAttempt(LEVEL_ONE_CLASS_NAME));
+			loseScreen.setOnRetry(() -> levelChangeAttempt(Config.Level.LEVEL_ONE_CLASS_NAME));
 		}
 		stage.setScene(loseScreen.getScene());
 	}

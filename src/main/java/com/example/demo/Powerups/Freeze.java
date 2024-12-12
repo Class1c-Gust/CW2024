@@ -3,6 +3,7 @@ package com.example.demo.Powerups;
 import com.example.demo.Planes.EnemyPlane;
 import com.example.demo.Planes.FighterPlane;
 import com.example.demo.Planes.UserPlane;
+import com.example.demo.config.Config;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Group;
@@ -13,18 +14,13 @@ import javafx.util.Duration;
  * Freeze powerup that when shot/collided with freezes planes within proximity
  */
 public class Freeze extends Powerup {
-    private static final String IMAGE_NAME = "freeze.png";
-    private static final int IMAGE_HEIGHT = 50;
-    private static final double frameDelay = 0.4;
-    private static final int VERTICAL_VELOCITY = (int)(8*frameDelay);
-    private static final int HORIZONTAL_VELOCITY = (int)(-10*frameDelay);
 
     public Freeze(double initialYPos) {
-        super(IMAGE_NAME, IMAGE_HEIGHT, initialYPos, true);
+        super(Config.Powerup.FREEZE_IMAGE_NAME, Config.Powerup.IMAGE_HEIGHT, initialYPos, true);
     }
     @Override
     public void updatePosition() {
-        moveHorizontally(HORIZONTAL_VELOCITY);
+        moveHorizontally(Config.Powerup.HORIZONTAL_VELOCITY);
     }
 
     //    public void updatePosition(int y) {

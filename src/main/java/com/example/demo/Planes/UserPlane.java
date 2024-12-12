@@ -12,6 +12,13 @@ import java.util.List;
 
 public class UserPlane extends FighterPlane {
 
+	private int VerticalVelocityMultiplier;
+	private int HorizontalVelocityMultiplier;
+	private boolean multiShotEnabled = false;
+	private int numberOfKills;
+	ProjectileFactory projectileFactory = new ProjectileFactory(Config.Player.IMAGE_NAME, Config.Player.IMAGE_HEIGHT);
+	private long lastTimeFired = 0; // Track the last time the user fired a projectile
+
 	public UserPlane(int initialHealth) {
 		super(Config.Player.IMAGE_NAME, Config.Player.IMAGE_HEIGHT,
 		      Config.Player.INITIAL_X_POSITION, Config.Player.INITIAL_Y_POSITION,
@@ -20,21 +27,6 @@ public class UserPlane extends FighterPlane {
 		this.HorizontalVelocityMultiplier = 0;
 	}
 
-	private static final double Y_UPPER_BOUND = Config.Player.Y_UPPER_BOUND;
-	private static final double Y_LOWER_BOUND = Config.Player.Y_LOWER_BOUND;
-	private static final double X_LEFT_BOUND = Config.Player.X_LEFT_BOUND;
-	private static final double X_RIGHT_BOUND = Config.Player.X_RIGHT_BOUND;
-	private static final double frameDelay = Config.Game.FRAME_DELAY;
-	private static final int VERTICAL_VELOCITY = (int)(8 * frameDelay);
-	private static final int HORIZONTAL_VELOCITY = (int)(8 * frameDelay);
-	private static final int PROJECTILE_Y_POSITION_OFFSET = Config.Player.PROJECTILE_Y_POSITION_OFFSET;
-	private int VerticalVelocityMultiplier;
-	private int HorizontalVelocityMultiplier;
-	private boolean multiShotEnabled = false;
-	private int numberOfKills;
-	ProjectileFactory projectileFactory = new ProjectileFactory(Config.Player.IMAGE_NAME, Config.Player.IMAGE_HEIGHT);
-	private long lastTimeFired = 0; // Track the last time the user fired a projectile
-	private static final long PROJECTILE_COOLDOWN = Config.Player.PROJECTILE_COOLDOWN;
 
 	/**
 	 * Updates position of the plane vertically and horizontally on the screen
@@ -42,18 +34,18 @@ public class UserPlane extends FighterPlane {
 	@Override
 	public void updatePosition() {
 		if (isMovingVertically()) {
-			double overallVerticalVelocity = VerticalVelocityMultiplier * VERTICAL_VELOCITY;
+			double overallVerticalVelocity = VerticalVelocityMultiplier * Config.Player.VERTICAL_VELOCITY;
 			double yPosition = getLayoutY() + getTranslateY() + (overallVerticalVelocity);
-			if (yPosition >= Y_UPPER_BOUND && yPosition <= Y_LOWER_BOUND) {
+			if (yPosition >= Config.Player.Y_UPPER_BOUND && yPosition <= Config.Player.Y_LOWER_BOUND) {
 				moveVertically(overallVerticalVelocity);
 			}
 		}
 
 		// Update horizontal position
 		if (isMovingHorizontally()) {
-			double overallHorizontalVelocity = HorizontalVelocityMultiplier * HORIZONTAL_VELOCITY;
+			double overallHorizontalVelocity = HorizontalVelocityMultiplier * Config.Player.HORIZONTAL_VELOCITY;
 			double xPosition = getLayoutX() + getTranslateX() + (overallHorizontalVelocity);
-			if (xPosition >= X_LEFT_BOUND && xPosition <= X_RIGHT_BOUND) {
+			if (xPosition >= Config.Player.X_LEFT_BOUND && xPosition <= Config.Player.X_RIGHT_BOUND) {
 				moveHorizontally(overallHorizontalVelocity);
 			}
 		}
@@ -67,9 +59,10 @@ public class UserPlane extends FighterPlane {
 	@Override
 	public GameObject fireProjectile() {
 		long currentTime = System.currentTimeMillis();
-		if (currentTime - lastTimeFired >= PROJECTILE_COOLDOWN){
+		if (currentTime - lastTimeFired >= Config.Player.PROJECTILE_COOLDOWN){
 			lastTimeFired = currentTime;
-			return projectileFactory.createUserProjectile(getLayoutX() + getTranslateX(), getProjectileYPosition(PROJECTILE_Y_POSITION_OFFSET));
+			return projectileFactory.createUserProjectile(getLayoutX() + getTranslateX(),
+					getProjectileYPosition(Config.Player.PROJECTILE_Y_POSITION_OFFSET));
 		}
 		return null;
 	}
@@ -126,10 +119,10 @@ public class UserPlane extends FighterPlane {
 		if (!getDisabledStatus()){
 			List<GameObject> projectiles = new ArrayList<>();
 			long currentTime = System.currentTimeMillis();
-			if (currentTime - lastTimeFired >= PROJECTILE_COOLDOWN) {
+			if (currentTime - lastTimeFired >= Config.Player.PROJECTILE_COOLDOWN) {
 				lastTimeFired = currentTime;
 				if (multiShotEnabled) {
-					double yPos = getProjectileYPosition(PROJECTILE_Y_POSITION_OFFSET);
+					double yPos = getProjectileYPosition(Config.Player.PROJECTILE_Y_POSITION_OFFSET);
 					projectiles.add(projectileFactory.createUserProjectile(getLayoutX() + getTranslateX(), yPos - 20));
 					projectiles.add(projectileFactory.createUserProjectile(getLayoutX() + getTranslateX(), yPos));
 					projectiles.add(projectileFactory.createUserProjectile(getLayoutX() + getTranslateX(), yPos + 20));

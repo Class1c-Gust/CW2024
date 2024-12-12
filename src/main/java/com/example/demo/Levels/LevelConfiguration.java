@@ -1,5 +1,7 @@
 package com.example.demo.Levels;
 
+import com.example.demo.config.Config;
+
 public class LevelConfiguration {
     private final int totalEnemies;
     private final int killsToAdvance;
@@ -13,11 +15,11 @@ public class LevelConfiguration {
 
 
     public LevelConfiguration(int levelNumber) {
-        this.totalEnemies = 1 + (levelNumber);
-        this.killsToAdvance = 12 + (levelNumber * 2);
-        this.enemySpawnProbability = 0.12 + (levelNumber * 0.01);
+        this.totalEnemies = Config.Level.BASE_ENEMY_COUNT + (levelNumber);
+        this.killsToAdvance = Config.Level.BASE_KILLS_TO_ADVANCE + (levelNumber * 2);
+        this.enemySpawnProbability = Config.Level.BASE_ENEMY_SPAWN_PROBABILITY + (levelNumber * 0.01);
         this.advancedEnemyProbability = (levelNumber * 0.0040);
-        this.playerInitialHealth = 5;
+        this.playerInitialHealth = Config.Player.DEFAULT_HEALTH;
         this.heartSpawnProbability = levelNumber * 0.0001;
         this.freezeSpawnProbability = levelNumber * 0.0003;
         this.multishotSpawnProbability = levelNumber * 0.00001;

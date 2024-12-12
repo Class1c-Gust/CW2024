@@ -3,14 +3,13 @@ package com.example.demo.Levels;
 import com.example.demo.Planes.Boss;
 import com.example.demo.Planes.BossFactory;
 import com.example.demo.Managers.SoundManager;
+import com.example.demo.config.Config;
 
 /**
  * Class representing the first boss level
  */
 public class BossLevelOne extends LevelParent {
 
-	private static final String BACKGROUND_IMAGE_NAME = "/com/example/demo/images/background2.jpg";
-	private static final int PLAYER_INITIAL_HEALTH = 5;
 	private final Boss boss;
 	private LevelViewBossOne levelView;
 	private final int levelNumber;
@@ -40,6 +39,8 @@ public class BossLevelOne extends LevelParent {
 		else if (boss.isDestroyed()) {
 			soundManager.stopBackgroundMusic();
 			if (levelNumber == 9){
+				System.out.println("ass");
+				soundManager.stopBackgroundMusic();
 				winGame();
 			}
 			else{
@@ -57,8 +58,8 @@ public class BossLevelOne extends LevelParent {
 	}
 
 	@Override
-	protected LevelView instantiateLevelView() {
-		levelView = new LevelViewBossOne(getRoot(), PLAYER_INITIAL_HEALTH);
+	protected HeartBar instantiateLevelView() {
+		levelView = new LevelViewBossOne(getRoot(), Config.Player.DEFAULT_HEALTH);
 		return levelView;
 	}
 	@Override

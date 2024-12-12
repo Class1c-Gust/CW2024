@@ -48,7 +48,7 @@ public class DynamicLevel extends LevelParent {
     }
 
     @Override
-    protected LevelView instantiateLevelView() {
-        return new LevelView(getRoot(), 5);
+    protected HeartBar instantiateLevelView() {
+        return new HeartBar(getRoot(), 5);
     }
 }

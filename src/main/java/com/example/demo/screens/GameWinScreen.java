@@ -1,5 +1,7 @@
 package com.example.demo.screens;
 
+import com.example.demo.Managers.SoundManager;
+import com.example.demo.config.Config;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
@@ -11,16 +13,16 @@ import javafx.scene.paint.Color;
 import javafx.scene.effect.DropShadow;
 
 public class GameWinScreen extends MenuScreen {
-    private static final String WIN_BACKGROUND = "/com/example/demo/images/background14.jpg";
     private Runnable onMainMenu;
     
     public GameWinScreen(double width, double height) {
-        super(width, height, WIN_BACKGROUND);
+        super(width, height, Config.Game.WIN_BACKGROUND);
         createScreen();
     }
     
     @Override
     protected void createScreen() {
+
         StackPane menuContainer = new StackPane();
         menuContainer.setPrefSize(width, height);
         
@@ -32,11 +34,17 @@ public class GameWinScreen extends MenuScreen {
         title.setFill(Color.GOLD);
         title.setEffect(new DropShadow(20, Color.BLACK));
         
-        Button mainMenuButton = createStyledButton("Main Menu");
+        Button mainMenuButton = createStyledButton("Back to Main Menu");
         Button exitButton = createStyledButton("Exit");
+        // Disable space and enter triggering button action
+        disableButtonDefaultKeyBehavior(mainMenuButton);
+        disableButtonDefaultKeyBehavior(exitButton);
         
         mainMenuButton.setOnAction(e -> {
-            if (onMainMenu != null) onMainMenu.run();
+            if (onMainMenu != null) {
+                soundManager.playBackgroundMusic(soundManager.getMenuMusic());
+                onMainMenu.run();
+            }
         });
         exitButton.setOnAction(e -> System.exit(0));
         

@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import com.example.demo.config.Config;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
 import javafx.scene.image.Image;
@@ -9,11 +10,10 @@ import java.util.Objects;
 
 public abstract class GameObject extends ImageView {
     private boolean isDestroyed;
-    private static final String IMAGE_LOCATION = "/com/example/demo/images/";
 
     public GameObject(String imageName, int imageHeight, double initialXPos, double initialYPos) {
         //this.setImage(new Image(IMAGE_LOCATION + imageName));
-        this.setImage(new Image(Objects.requireNonNull(getClass().getResource(IMAGE_LOCATION + imageName)).toExternalForm()));
+        this.setImage(new Image(Objects.requireNonNull(getClass().getResource(Config.Game.IMAGE_LOCATION + imageName)).toExternalForm()));
         this.setLayoutX(initialXPos);
         this.setLayoutY(initialYPos);
         this.setFitHeight(imageHeight);

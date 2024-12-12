@@ -1,9 +1,11 @@
 package com.example.demo.screens;
 
 import com.example.demo.Managers.SoundManager;
+import com.example.demo.config.Config;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Text;
@@ -15,20 +17,18 @@ import javafx.scene.paint.Color;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.KeyCode;
 
+import java.util.ConcurrentModificationException;
+
 public class MainMenu extends MenuScreen{
-    private static final String MENU_BACKGROUND_IMAGE = "/com/example/demo/images/background1.jpg";
     private Runnable onStart;
-    private final SoundManager soundManager;
     private MediaPlayer mediaPlayer;
 
     public MainMenu(double width, double height) {
-        super(width, height, MENU_BACKGROUND_IMAGE);
-        this.soundManager = SoundManager.getInstance();
+        super(width, height, Config.Game.MENU_BACKGROUND_IMAGE);
         createScreen();
     }
     @Override
     protected void createScreen() {
-//        initializeBackground();
         soundManager.playBackgroundMusic(soundManager.getMenuMusic());
         StackPane menuContainer = new StackPane();
         menuContainer.setPrefSize(width, height);
@@ -44,16 +44,23 @@ public class MainMenu extends MenuScreen{
         Button startButton = createStyledButton("Start");
         Button exitButton = createStyledButton("Exit");
 
+        // Disable space and enter triggering button action
+        disableButtonDefaultKeyBehavior(startButton);
+        disableButtonDefaultKeyBehavior(exitButton);
+
         startButton.setOnAction(e -> {
             soundManager.stopBackgroundMusic();
             setStartGame();
         });
+
         exitButton.setOnAction(e -> System.exit(0));
 
         menuBox.getChildren().addAll(title, startButton, exitButton);
         menuContainer.getChildren().add(menuBox);
         root.getChildren().add(menuContainer);
     }
+
+
 
     private void setStartGame() {
         if (onStart != null) {
