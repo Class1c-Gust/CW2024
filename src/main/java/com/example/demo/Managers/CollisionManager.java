@@ -1,8 +1,8 @@
 package com.example.demo.Managers;
 
-import com.example.demo.GameObject;
-import com.example.demo.Planes.UserPlane;
-import com.example.demo.Powerups.Powerup;
+import com.example.demo.Objects.GameObject;
+import com.example.demo.Objects.Planes.UserPlane;
+import com.example.demo.Objects.Powerups.Powerup;
 import javafx.scene.Group;
 
 import java.util.List;
@@ -98,8 +98,8 @@ public class CollisionManager {
 
     /**
      * Handles collisions between 2 actors
-     * @param actors1
-     * @param actors2
+     * @param actors1 1st List of gameObjects
+     * @param actors2 2nd List of gameObjects
      */
     private void handleCollisions(List<GameObject> actors1,
                                   List<GameObject> actors2, int type) {

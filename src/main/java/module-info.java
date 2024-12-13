@@ -9,10 +9,11 @@ module com.example.demo {
     opens com.example.demo to javafx.fxml;
     exports com.example.demo.controller;
     opens com.example.demo.Levels to javafx.fxml;
-    opens com.example.demo.Planes to javafx.fxml;
-    opens com.example.demo.Projectiles to javafx.fxml;
-    opens com.example.demo.Powerups to javafx.fxml;
+    opens com.example.demo.Objects.Planes to javafx.fxml;
+    opens com.example.demo.Objects.Projectiles to javafx.fxml;
+    opens com.example.demo.Objects.Powerups to javafx.fxml;
     opens com.example.demo.Managers to javafx.fxml;
     opens com.example.demo.screens to javafx.fxml;
+    opens com.example.demo.Objects to javafx.fxml;
 
 }

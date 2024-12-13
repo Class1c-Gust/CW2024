@@ -1,6 +1,6 @@
-package com.example.demo.Powerups;
+package com.example.demo.Objects.Powerups;
 
-import com.example.demo.Planes.UserPlane;
+import com.example.demo.Objects.Planes.UserPlane;
 import com.example.demo.config.Config;
 import javafx.scene.Group;
 
@@ -8,14 +8,12 @@ import javafx.scene.Group;
  * Heart powerup which allows users to regain an extra life when activated
  */
 public class Heart extends Powerup {
-
+    /**
+     * Constructor for the Heart class
+     * @param initialYPos Initial Y-Coordinate position of the heart powerup icon
+     */
     public Heart(double initialYPos) {
         super(Config.Powerup.HEART_IMAGE_NAME, Config.Powerup.IMAGE_HEIGHT, initialYPos, false);
-    }
-
-    @Override
-    public void updateActor() {
-        updatePosition();
     }
 
     /**
@@ -26,7 +24,7 @@ public class Heart extends Powerup {
     @Override
     public void activatePower(Group root, UserPlane user){
         this.destroy();
-        user.addHealth();
+        user.addHealth(); // increment user health
 
     }
 

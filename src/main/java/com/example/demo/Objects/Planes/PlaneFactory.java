@@ -1,17 +1,22 @@
-package com.example.demo.Planes;
+package com.example.demo.Objects.Planes;
 
-import com.example.demo.GameObject;
-import com.example.demo.GameObjectFactory;
+import com.example.demo.Objects.GameObject;
+import com.example.demo.Objects.GameObjectFactory;
 
 /**
- * Implements GameEntityFactory interface
- * Creates plane products
+ * Implements GameObjectFactory interface to creates concrete plane products
  */
 public abstract class PlaneFactory implements GameObjectFactory {
     protected String imageName;
     protected int imageHeight;
     protected int defaultHealth;
 
+    /**
+     * Constructor of PlaneFactory
+     * @param imageName image of the plane
+     * @param imageHeight image height
+     * @param defaultHealth health of the plane
+     */
     public PlaneFactory(String imageName, int imageHeight, int defaultHealth) {
         this.imageName = imageName;
         this.imageHeight = imageHeight;

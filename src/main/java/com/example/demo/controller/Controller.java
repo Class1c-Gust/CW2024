@@ -13,19 +13,17 @@ import javafx.stage.Stage;
 import com.example.demo.Levels.LevelParent;
 import com.example.demo.Levels.LevelFactory;
 
+/**
+ * The primary controller of the application
+ */
 public class Controller {
 
-	//	private static final String LEVEL_ONE_CLASS_NAME = "com.example.demo.Levels.LevelOne";
 	private final Stage stage;
 	private MainMenu mainMenu;
 	private GameWinScreen winScreen;
 	private GameLoseScreen loseScreen;
 
-	/**
-	 *
-	 * @param stage
-	 */
-	/**
+    /**
 	 * Initializes the controller with the specified stage.
 	 *
 	 * @param stage the primary stage of the application

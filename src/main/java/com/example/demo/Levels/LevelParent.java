@@ -3,27 +3,32 @@ package com.example.demo.Levels;
 import java.util.*;
 import java.util.List;
 import java.util.function.Consumer;
-import com.example.demo.*;
+
 import com.example.demo.Managers.CollisionManager;
 import com.example.demo.Managers.SoundManager;
-import com.example.demo.Planes.EnemyPlaneFactory;
-import com.example.demo.Planes.FighterPlane;
-import com.example.demo.Planes.UserPlane;
-import com.example.demo.Planes.UserPlaneFactory;
-import com.example.demo.Powerups.Freeze;
-import com.example.demo.Powerups.Powerup;
-import com.example.demo.Powerups.Heart;
-import com.example.demo.Powerups.Multishot;
+import com.example.demo.Objects.GameObject;
+import com.example.demo.Objects.Planes.EnemyPlaneFactory;
+import com.example.demo.Objects.Planes.FighterPlane;
+import com.example.demo.Objects.Planes.UserPlane;
+import com.example.demo.Objects.Planes.UserPlaneFactory;
+import com.example.demo.Objects.Powerups.Freeze;
+import com.example.demo.Objects.Powerups.Powerup;
+import com.example.demo.Objects.Powerups.Heart;
+import com.example.demo.Objects.Powerups.Multishot;
 import com.example.demo.config.Config;
 import javafx.animation.*;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.image.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.*;
 import javafx.util.Duration;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 
+/**
+ * Superclass for level instances, handles all common level interactions
+ * Includes level transitioning, scene initializing and updating, object state updating etc.
+ */
 public abstract class LevelParent {
 	private final double screenHeight;
 	private final double screenWidth;
@@ -41,22 +46,27 @@ public abstract class LevelParent {
 	private final List<GameObject> userProjectiles;
 	private final List<GameObject> enemyProjectiles;
 	private final List<Powerup> powerups;
-	
+
 	private int currentNumberOfEnemies;
 	private final int powerupLimit;
-	private int levelnumber;
 	private Consumer<String> levelchange;
 	private final EnemyPlaneFactory enemyFactory;
 	private final CollisionManager collisionManager;
 	private final LevelConfiguration levelConfig;
 
+	/**
+	 * Constructs a LevelParent instance and initializes the game state.
+	 *
+	 * @param screenHeight The height of the screen.
+	 * @param screenWidth  The width of the screen.
+	 * @param levelnumber  The number of the current level.
+	 */
 	public LevelParent(double screenHeight, double screenWidth, int levelnumber) {
 		this.root = new Group();
 		this.soundManager = SoundManager.getInstance();
 		this.scene = new Scene(root, screenWidth, screenHeight);
 		this.timeline = new Timeline();
-		this.levelnumber = levelnumber;
-		this.levelConfig = new LevelConfiguration(levelnumber);
+        this.levelConfig = new LevelConfiguration(levelnumber);
 		UserPlaneFactory userFactory = new UserPlaneFactory(levelConfig.getPlayerInitialHealth());
 		this.user = userFactory.createUserPlane();
 		this.enemyFactory = new EnemyPlaneFactory();
@@ -80,25 +90,51 @@ public abstract class LevelParent {
 	}
 
 	/**
-	 * Getter method
-	 * @return the enemyFactory instance
+	 * Provides access to the factory for creating enemy planes.
+	 *
+	 * @return The EnemyPlaneFactory instance.
 	 */
 	public EnemyPlaneFactory getEnemyFactory() {
 		return enemyFactory;
 	}
 
+
+	/**
+	 * Plays the specified level's background music.
+	 *
+	 * @param music The filename of the music to be played.
+	 */
 	protected void playLevelMusic(String music) {
 		soundManager.playBackgroundMusic(music);
 	}
 
+	/**
+	 * Abstract method to initialize friendly units, implemented by subclasses.
+	 */
 	protected abstract void initializeFriendlyUnits();
 
+	/**
+	 * Abstract method to check whether the game is over, implemented by subclasses.
+	 */
 	protected abstract void checkIfGameOver();
 
+	/**
+	 * Abstract method to spawn enemy units, implemented by subclasses.
+	 */
 	protected abstract void spawnEnemyUnits();
 
+	/**
+	 * Abstract method to instantiate the level's UI view.
+	 *
+	 * @return The HeartBar instance for the level.
+	 */
 	protected abstract HeartBar instantiateLevelView();
 
+	/**
+	 * Initializes the scene by setting up the background, friendly units, and level view.
+	 *
+	 * @return The initialized Scene instance.
+	 */
 	public Scene initializeScene() {
 		initializeBackground(false);
 		initializeFriendlyUnits();
@@ -106,16 +142,30 @@ public abstract class LevelParent {
 		return scene;
 	}
 
-
+	/**
+	 * Starts the game timeline and focuses on the background for input handling.
+	 */
 	public void startGame() {
 		background.requestFocus();
 		timeline.play();
 	}
+
+	/**
+	 * Sets a callback to handle level change events.
+	 *
+	 * @param callback A Consumer accepting the name of the next level.
+	 */
 	public void levelChangeStatus(Consumer<String> callback) {
 		levelchange = callback;
 	}
+
+	/**
+	 * Transitions to the next level after a countdown.
+	 *
+	 * @param levelName The name of the next level to load.
+	 */
 	public void goToNextLevel(String levelName) {
-		if (levelchange != null){
+		if (levelchange != null) {
 			timeline.stop();
 			final int[] countdown = {5};
 			Label countdownLabel = new Label();
@@ -125,8 +175,8 @@ public abstract class LevelParent {
 
 			levelClearedText.setLayoutX((screenWidth / 2 - 250));
 			levelClearedText.setLayoutY(screenHeight / 2 - 50); // Center horizontally
-			countdownLabel.setLayoutX(screenWidth/2 - 50);
-			countdownLabel.setLayoutY(5 + screenHeight/2);
+			countdownLabel.setLayoutX(screenWidth / 2 - 50);
+			countdownLabel.setLayoutY(1 + screenHeight / 2);
 
 			resetScreen(); // remove all screen elements
 			root.getChildren().addAll(levelClearedText, countdownLabel); // add labels to screen
@@ -151,12 +201,15 @@ public abstract class LevelParent {
 	/**
 	 * Remove all elements from the scene and reinitialise the background image
 	 */
-	private void resetScreen(){
+	private void resetScreen() {
 		this.root.getChildren().clear();
 		initializeBackground(true);
 
 	}
 
+	/**
+	 * Updates all game components and checks for collisions, level state, and game over conditions.
+	 */
 	protected void updateScene() {
 		updateHearts();
 		updateMultishot();
@@ -173,35 +226,44 @@ public abstract class LevelParent {
 		checkIfGameOver();
 	}
 
-
+	/**
+	 * Sets up the game timeline for periodic updates.
+	 */
 	private void initializeTimeline() {
 		timeline.setCycleCount(Timeline.INDEFINITE);
 		KeyFrame gameLoop = new KeyFrame(Duration.millis(Config.Screen.MILLISECOND_DELAY), e -> updateScene());
 		timeline.getKeyFrames().add(gameLoop);
 	}
 
+	/**
+	 * Configures the background image and sets up key event handlers.
+	 *
+	 * @param transitionedNextLevel Whether transitioning to the next level.
+	 */
 	private void initializeBackground(boolean transitionedNextLevel) {
 		background.setFocusTraversable(true);
 		background.setFitHeight(screenHeight);
 		background.setFitWidth(screenWidth);
 		background.setOnKeyPressed(e -> {
-            KeyCode keyCode = e.getCode();
-            if (keyCode == KeyCode.UP) user.moveUp();
-            if (keyCode == KeyCode.DOWN) user.moveDown();
+			KeyCode keyCode = e.getCode();
+			if (keyCode == KeyCode.UP) user.moveUp();
+			if (keyCode == KeyCode.DOWN) user.moveDown();
 			if (keyCode == KeyCode.LEFT) user.moveLeft(); // Added horizontal movement functionality
 			if (keyCode == KeyCode.RIGHT) user.moveRight();
-            if (keyCode == KeyCode.SPACE && !transitionedNextLevel) fireProjectile();
-        });
+			if (keyCode == KeyCode.SPACE && !transitionedNextLevel) fireProjectile();
+		});
 		background.setOnKeyReleased(e -> {
-            KeyCode keyCode = e.getCode();
-            if (keyCode == KeyCode.UP || keyCode == KeyCode.DOWN) user.stopVertical(); // split movement between horizontal and vertical
+			KeyCode keyCode = e.getCode();
+			if (keyCode == KeyCode.UP || keyCode == KeyCode.DOWN)
+				user.stopVertical(); // split movement between horizontal and vertical
 			if (keyCode == KeyCode.LEFT || keyCode == KeyCode.RIGHT) user.stopHorizontal();
-        });
+		});
 		root.getChildren().add(background);
 	}
 
 	/**
 	 * Fires multiple projectiles for multishot powerup
+	 *
 	 * @param projectiles List of projectiles to be fired
 	 */
 	private void fireProjectiles(List<GameObject> projectiles) {
@@ -212,15 +274,15 @@ public abstract class LevelParent {
 			userProjectiles.add(projectile);
 		}
 	}
+
 	/**
-	 * Modified to fire multishot if enabled
+	 * Fires a single or multiple projectiles based on the user's power-up state.
 	 */
 	private void fireProjectile() {
-		if (user.isMultishotEnabled()){
+		if (user.isMultishotEnabled()) {
 			List<GameObject> projectiles = user.fireMultiShot();
 			fireProjectiles(projectiles);
-		}
-		else {
+		} else {
 			GameObject projectile = user.fireProjectile();
 			if (projectile != null) {
 				root.getChildren().add(projectile);
@@ -229,12 +291,13 @@ public abstract class LevelParent {
 		}
 		soundManager.playShootSound();
 	}
+
 	/**
 	 * Spawns a heart if below the set spawn limit and the players health has decreased
 	 * Probability of heart spawning, spawn limit can be changed depending on level
 	 */
-	private void updateHearts(){
-		if (powerups.size() < powerupLimit){
+	private void updateHearts() {
+		if (powerups.size() < powerupLimit) {
 			if (getUser().getHealth() < levelConfig.getPlayerInitialHealth()) {
 				if (Math.random() < levelConfig.getHeartSpawnProbability()) {
 					Heart heart = new Heart(randomYposition());
@@ -249,9 +312,9 @@ public abstract class LevelParent {
 	/**
 	 * Creates multishot powerup if probability is met and adds it to the powerup list
 	 */
-	private void updateMultishot(){
-		if (powerups.size() < powerupLimit){
-			if (Math.random() < levelConfig.getMultishotSpawnProbability()){
+	private void updateMultishot() {
+		if (powerups.size() < powerupLimit) {
+			if (Math.random() < levelConfig.getMultishotSpawnProbability()) {
 				Multishot multiShotIcon = new Multishot(randomYposition());
 				root.getChildren().add(multiShotIcon);
 				powerups.add(multiShotIcon);
@@ -262,21 +325,36 @@ public abstract class LevelParent {
 	/**
 	 * Creates freeze powerup if probability is met and adds it to the powerup list
 	 */
-	private void updateFreezeSpawn(){
-		if (Math.random() < levelConfig.getFreezeSpawnProbability() && powerups.size() < powerupLimit){
+	private void updateFreezeSpawn() {
+		if (Math.random() < levelConfig.getFreezeSpawnProbability() && powerups.size() < powerupLimit) {
 			Freeze freeze = new Freeze(randomYposition());
 			root.getChildren().add(freeze);
 			powerups.add(freeze);
-			}
+		}
 
 	}
 
-	private double randomYposition(){return 100 + (Math.random() * (this.screenHeight - 200));}
+	/**
+	 * Generates a random Y-position for placing objects.
+	 *
+	 * @return A random Y-coordinate within the screen bounds.
+	 */
+	private double randomYposition() {
+		return 100 + (Math.random() * (this.screenHeight - 200));
+	}
 
+	/**
+	 * Commands enemy units to fire projectiles.
+	 */
 	private void generateEnemyFire() {
 		enemyUnits.forEach(enemy -> spawnEnemyProjectile(((FighterPlane) enemy).fireProjectile()));
 	}
 
+	/**
+	 * Adds a new projectile fired by an enemy to the scene.
+	 *
+	 * @param projectile The projectile to spawn.
+	 */
 	private void spawnEnemyProjectile(GameObject projectile) {
 		if (projectile != null) {
 			root.getChildren().add(projectile);
@@ -284,14 +362,21 @@ public abstract class LevelParent {
 		}
 	}
 
+	/**
+	 * Updates the state of all actors in the game, including friendly units, enemy units,
+	 * user projectiles, enemy projectiles, and power-ups.
+	 */
 	private void updateActors() {
 		friendlyUnits.forEach(GameObject::updateActor);
 		enemyUnits.forEach(GameObject::updateActor);
 		userProjectiles.forEach(GameObject::updateActor);
 		enemyProjectiles.forEach(GameObject::updateActor);
-		powerups.forEach(GameObject:: updateActor); // Update powerups
+		powerups.forEach(GameObject::updateActor); // Update powerups
 	}
 
+	/**
+	 * Removes all destroyed game objects from their respective lists and the game scene.
+	 */
 	private void removeAllDestroyedActors() {
 		removeDestroyedActors(friendlyUnits);
 		removeDestroyedActors(enemyUnits);
@@ -300,6 +385,11 @@ public abstract class LevelParent {
 		removeDestroyedPowerups(powerups); // Destroy powerup objects
 	}
 
+	/**
+	 * Removes destroyed game objects from the specified list and the game scene.
+	 *
+	 * @param actors The list of game objects to check and remove if destroyed.
+	 */
 	private void removeDestroyedActors(List<GameObject> actors) {
 		List<GameObject> destroyedActors = actors.stream().filter(GameObject::isDestroyed)
 				.toList();
@@ -310,9 +400,10 @@ public abstract class LevelParent {
 	/**
 	 * Remove destroyed powerups from the screen, without removing them from the list of powerups
 	 * This is so the powerup is still activated
+	 *
 	 * @param actors List of powerups
 	 */
-	private void removeDestroyedPowerups(List<Powerup> actors){
+	private void removeDestroyedPowerups(List<Powerup> actors) {
 		List<Powerup> destroyedActors = actors.stream().filter(Powerup::isDestroyed)
 				.toList();
 		root.getChildren().removeAll(destroyedActors);
@@ -320,62 +411,113 @@ public abstract class LevelParent {
 	}
 
 	/**
-	 * Handles powerup icon collisions with user plane
+	 * Updates the level view by synchronizing it with the user's current health.
 	 */
-
-
 	private void updateLevelView() {
 		levelView.updateHearts(user.getHealth());
 	}
 
+	/**
+	 * Updates the kill count of the user based on the number of destroyed enemy units.
+	 */
 	private void updateKillCount() {
 		for (int i = 0; i < currentNumberOfEnemies - enemyUnits.size(); i++) {
 			user.incrementKillCount();
 		}
 	}
 
+	/**
+	 * Ends the game with a win state, stopping the timeline and triggering the level change.
+	 */
 	protected void winGame() {
 		timeline.stop();
 		levelchange.accept("WIN");
 	}
 
+	/**
+	 * Ends the game with a lose state, stopping the timeline, playing the game-over sound,
+	 * and triggering the level change.
+	 */
 	protected void loseGame() {
 		timeline.stop();
 		levelchange.accept("LOSE");
 		soundManager.playGameOverSound();
 	}
 
+	/**
+	 * Retrieves the user-controlled plane in the current level.
+	 *
+	 * @return The user's plane instance.
+	 */
 	protected UserPlane getUser() {
 		return user;
 	}
 
+	/**
+	 * Retrieves the root node of the game scene.
+	 *
+	 * @return The root group of the scene.
+	 */
 	protected Group getRoot() {
 		return root;
 	}
 
+	/**
+	 * Retrieves the current number of active enemies in the level.
+	 *
+	 * @return The count of enemy units.
+	 */
 	protected int getCurrentNumberOfEnemies() {
 		return enemyUnits.size();
 	}
 
+	/**
+	 * Adds a new enemy unit to the game scene and the list of enemy units.
+	 *
+	 * @param enemy The enemy unit to add.
+	 */
 	protected void addEnemyUnit(GameObject enemy) {
 		enemyUnits.add(enemy);
 		root.getChildren().add(enemy);
 	}
 
+	/**
+	 * Retrieves the maximum Y-position allowed for enemy movement on the screen.
+	 *
+	 * @return The maximum Y-coordinate for enemies.
+	 */
 	protected double getEnemyMaximumYPosition() {
 		return enemyMaximumYPosition;
 	}
 
+	/**
+	 * Retrieves the screen width of the game.
+	 *
+	 * @return The screen width.
+	 */
 	protected double getScreenWidth() {
 		return screenWidth;
 	}
 
+	/**
+	 * Checks if the user's plane is destroyed.
+	 *
+	 * @return True if the user's plane is destroyed; false otherwise.
+	 */
 	protected boolean userIsDestroyed() {
 		return user.isDestroyed();
 	}
 
+	/**
+	 * Updates the count of current enemy units.
+	 */
 	private void updateNumberOfEnemies() {
 		currentNumberOfEnemies = enemyUnits.size();
 	}
-
 }
+
+
+
+
+
+
