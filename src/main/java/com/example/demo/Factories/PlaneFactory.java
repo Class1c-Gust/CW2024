@@ -1,7 +1,6 @@
 package com.example.demo.Factories;
 
 import com.example.demo.Objects.GameObject;
-import com.example.demo.Objects.GameObjectFactory;
 
 /**
  * Implements GameObjectFactory interface to creates concrete plane products

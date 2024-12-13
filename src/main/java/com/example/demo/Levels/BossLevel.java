@@ -60,6 +60,7 @@ public class BossLevel extends LevelParent {
 				winGame();
 			} else {
 				// Play level-up sound and transition to the next level
+				soundManager.stopBackgroundMusic();
 				soundManager.playLevelUpSound();
 				goToNextLevel("LEVEL_" + (levelNumber + 1));
 			}

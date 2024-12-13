@@ -1,4 +1,6 @@
-package com.example.demo.Objects;
+package com.example.demo.Factories;
+
+import com.example.demo.Objects.GameObject;
 
 /**
  * New interface to create GameEntity products
