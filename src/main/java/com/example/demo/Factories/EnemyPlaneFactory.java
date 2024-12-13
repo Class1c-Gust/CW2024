@@ -1,6 +1,7 @@
-package com.example.demo.Objects.Planes;
+package com.example.demo.Factories;
 
 import com.example.demo.Objects.GameObject;
+import com.example.demo.Objects.Planes.EnemyPlane;
 import com.example.demo.config.Config;
 
 /**

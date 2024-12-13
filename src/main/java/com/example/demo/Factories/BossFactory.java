@@ -1,4 +1,8 @@
-package com.example.demo.Objects.Planes;
+package com.example.demo.Factories;
+
+import com.example.demo.Objects.Planes.Boss;
+import com.example.demo.Objects.Planes.BossConfiguration;
+
 /**
  * Produces concrete Boss products for various boss creation using factory pattern method
  */

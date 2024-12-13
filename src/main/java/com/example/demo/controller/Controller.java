@@ -11,7 +11,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import com.example.demo.Levels.LevelParent;
-import com.example.demo.Levels.LevelFactory;
+import com.example.demo.Factories.LevelFactory;
 
 /**
  * The primary controller of the application

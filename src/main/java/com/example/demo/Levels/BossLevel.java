@@ -1,7 +1,7 @@
 package com.example.demo.Levels;
 
 import com.example.demo.Objects.Planes.Boss;
-import com.example.demo.Objects.Planes.BossFactory;
+import com.example.demo.Factories.BossFactory;
 import com.example.demo.Managers.SoundManager;
 import com.example.demo.config.Config;
 

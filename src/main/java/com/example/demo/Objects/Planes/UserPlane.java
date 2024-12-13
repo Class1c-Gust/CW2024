@@ -1,7 +1,7 @@
 package com.example.demo.Objects.Planes;
 
 import com.example.demo.Objects.GameObject;
-import com.example.demo.Objects.Projectiles.ProjectileFactory;
+import com.example.demo.Factories.ProjectileFactory;
 import com.example.demo.config.Config;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;

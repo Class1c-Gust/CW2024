@@ -1,4 +1,8 @@
-package com.example.demo.Levels;
+package com.example.demo.Factories;
+
+import com.example.demo.Levels.BossLevel;
+import com.example.demo.Levels.DynamicLevel;
+import com.example.demo.Levels.LevelParent;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

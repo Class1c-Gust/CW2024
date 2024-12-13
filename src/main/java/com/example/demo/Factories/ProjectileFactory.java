@@ -1,7 +1,9 @@
-package com.example.demo.Objects.Projectiles;
+package com.example.demo.Factories;
 
 import com.example.demo.Objects.GameObject;
 import com.example.demo.Objects.GameObjectFactory;
+import com.example.demo.Objects.Projectiles.EnemyProjectile;
+import com.example.demo.Objects.Projectiles.UserProjectile;
 
 /**
  * A factory class for creating different types of projectiles.

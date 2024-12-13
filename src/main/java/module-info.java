@@ -15,5 +15,6 @@ module com.example.demo {
     opens com.example.demo.Managers to javafx.fxml;
     opens com.example.demo.screens to javafx.fxml;
     opens com.example.demo.Objects to javafx.fxml;
+    opens com.example.demo.Factories to javafx.fxml;
 
 }
