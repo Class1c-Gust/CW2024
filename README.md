@@ -19,11 +19,8 @@ JavaFX: 19.0.2
 ## Main Menu
 Added a main menu which allows the user to start the game without it starting directly. They can either start the game or exit the entire application using two buttons
 
-## Game over screen
-Game over screen shows when the user dies allowing them to either retry from level one or go back to the main menu
-
-## Game win screen
-Shows when the User beats the last boss, allowing them to return to the main menu
+## Game over screen and Game win screen
+Game over screen shows when the user dies allowing them to either retry from level one or go back to the main menu. Game win screen shows when the User beats the last boss, allowing them to return to the main menu
 
 ## Transition screen
 Transition text shows after the user beats a level to show a countdown from 5 to begin the next level
@@ -31,11 +28,74 @@ Transition text shows after the user beats a level to show a countdown from 5 to
 ## Boss health bar and text
 Health bar of each boss shows on the top right corner of the screen along with text showing how many shots need to hit before it is destroyed. This is displayed durig each boss level at levels 3, 6, and 9
 
-## New and improved Background images
-New backgrounds are present, each different for each level
+## New and improved Background images, background music, and Sound effects
+New backgrounds are present, along with different background music for each level. Sound effects have been added for various different scenarios in the game; for example, taking damage, shooting, levelup, collisions, powerups etc
 
-## Sound effects
-Sound effects have been added for various different scenarios in the game; for example, taking damage, shooting, levelup, collisions, powerups etc
+## Powerups
+New powerups have been added to give the user buffs:
+1. Health powerup give the user an extra heart
+2. Freeze powerup freezes enemies within a radius and applies a glow freeze effect
+3. Multishot powerup gives the user 3 bullets per shot
+
+Powerups probability of spawning changes depending on the level
+
+## New enemies and bosses and weapons
+A new enemy type has been introduced which travels faster and has a faster fire rate than default enemies, these have a lower probability of spawning mainly at the higher levels. Additionally 2 more bosses have been introduced which have stats better than the previous boss. They now have the ability to fire missiles.
+
+## Missiles
+Bosses can now fire missiles which travel faster than their regular fireball.
+
+## Dynamic levelling
+Levelling is now dynamic which means the aspects of the level changes each level. For example, more enemies spawn next level, more needed to kill to advance, higher probability of advanced enemies spawning etc
+
+## 60 FPS 
+Improved frame rate of 60 frames per second is now standard to significantly improve the user experience
+
+## Player movement overhaul
+Players can move horizontally and vertically
+
+
+<h1>Implemented and not working properly</h1>
+
+## Background music mute 
+Functions needed work fine but did not implement the pause menu needed to mute the music. Explanation why provided below.
+
+<h1>Features not implemented</h1>
+
+## Pause menu
+Did not implement due to added complexity it would have added to implement into the game
+
+## Moving background 
+Did not implement due to added complexity and peformance issues i encounted during a trial run of this feature
+
+## Timer for boss levels
+Did not implement due to time constraints 
+
+## Change aircraft model
+Did not implement due to time constraint and overall complexity in implementing new model aircrafts (eg needed to make a whole new menu)
+
+## Physics for user aircraft staying in the air
+Did not implement due to the added complexity of the mathematical elements needed for this to function
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
