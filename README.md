@@ -3,7 +3,7 @@
 <h1>Github Repository</h1>
 https://github.com/Class1c-Gust/CW2024.git
 
-<h1Compilaition Instructions</h1>
+## Compilaition Instructions
 ## Pre-requisites
 
 <h1>Implemented and working properly</h1>
