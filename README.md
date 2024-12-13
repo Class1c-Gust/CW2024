@@ -78,7 +78,7 @@ Did not implement due to time constraint and overall complexity in implementing 
 Did not implement due to the added complexity of the mathematical elements needed for this to function
 
 <h1>Additional Java classes</h1>
-1. Config.java - To hold all static contants and configurations in one place
+1. Config.java - To hold all static contants and configurations in one place <br>
 2. GameObjectFactory, BossFactory, EnemyPlaneFactory, LevelFactory, PlaneFactory, ProjectileFactory, UserPlaneFactory - To provide concrete game objecr products to create these game objects whilst applying the factory method design pattern
 3, LevelConfiguration - Provides parameters for enemy spawning player health, powerup probabilities
 4. CollisonManager - Manage collisions in the game
