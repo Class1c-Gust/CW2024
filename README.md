@@ -79,34 +79,34 @@ Did not implement due to the added complexity of the mathematical elements neede
 
 <h1>Additional Java classes</h1>
 1. Config.java - To hold all static contants and configurations in one place <br>
-2. GameObjectFactory, BossFactory, EnemyPlaneFactory, LevelFactory, PlaneFactory, ProjectileFactory, UserPlaneFactory - To provide concrete game objecr products to create these game objects whilst applying the factory method design pattern
-3, LevelConfiguration - Provides parameters for enemy spawning player health, powerup probabilities
-4. CollisonManager - Manage collisions in the game
-5. SoundManager - Manage Sounds in the game
-6. BossConfiguration - Provides parameters for the boss including shield and missile probability, health, fire rate etc
-7. Freeze - Define freeze powerup
-8. Heart - Define freeze Heart
-9. Multishot - Define freeze Multishot
-10. Powerup - Define Powerup superclass
-11. BossMissile - Create a boss missile providing specific behaviour
-12. GameObject - Provides basic functionality for handling movement, destruction, and bounding box retrieval.
-13. GameLoseScreen - screen provides options to retry the game or return to the main menu after losing
-14. GameWinScreen - screen provides options to retry the game or return to the main menu after winning
-15. MainMenu - Represents the main menu screen of the game. This screen provides options to start the game or exit.
-16. MenuScreen - Base class for screens, provides common functionality for managing screen layour, button styles etc
+2. GameObjectFactory, BossFactory, EnemyPlaneFactory, LevelFactory, PlaneFactory, ProjectileFactory, UserPlaneFactory - To provide concrete game objecr products to create these game objects whilst applying the factory method design pattern <br> 
+3, LevelConfiguration - Provides parameters for enemy spawning player health, powerup probabilities <br>
+4. CollisonManager - Manage collisions in the game <br>
+5. SoundManager - Manage Sounds in the game <br>
+6. BossConfiguration - Provides parameters for the boss including shield and missile probability, health, fire rate etc <br>
+7. Freeze - Define freeze powerup <br>
+8. Heart - Define freeze Heart <br>
+9. Multishot - Define freeze Multishot <br>
+10. Powerup - Define Powerup superclass <br>
+11. BossMissile - Create a boss missile providing specific behaviour <br>
+12. GameObject - Provides basic functionality for handling movement, destruction, and bounding box retrieval. <br>
+13. GameLoseScreen - screen provides options to retry the game or return to the main menu after losing <br>
+14. GameWinScreen - screen provides options to retry the game or return to the main menu after winning <br>
+15. MainMenu - Represents the main menu screen of the game. This screen provides options to start the game or exit. <br>
+16. MenuScreen - Base class for screens, provides common functionality for managing screen layour, button styles etc <br>
 
 <h1>Modified Java classes</h1>
-1. Heartbar - Changed from heartdisplay to display hearts and update
-2. BossLevel - to manage the boss, user interactions, and level transitions
-3. DynamicLevel - changed from Levelone, Leveltwo etc to represent dynamic levels and provide functionality to handle enemy spawning, interactions etc
-4. LevelParent - Chnaged to incorporate level transitions, fixed game win and loss, now update powerups
-5. LevelViewBoss - Changed from LevelViewLevelTwo to provide new boss ui features 
-6. Controller - Now handles win and lose screen
-7. Main - improved code style
-8. ActiveActor and ActivaActorDestructible have been deleted and replaced by gameObject for more effecient object creation and less complexity
-9. ShieldImage, GameOverImage, WinImage have all been deleted and implemented differenly
-10. Destructible interface deleted as made redundant from changes
-11. module-info.java altered to incorporate necessary dependencies for javaFX and Junit tests
+1. Heartbar - Changed from heartdisplay to display hearts and update <br>
+2. BossLevel - to manage the boss, user interactions, and level transitions <br>
+3. DynamicLevel - changed from Levelone, Leveltwo etc to represent dynamic levels and provide functionality to handle enemy spawning, interactions etc <br>
+4. LevelParent - Chnaged to incorporate level transitions, fixed game win and loss, now update powerups <br>
+5. LevelViewBoss - Changed from LevelViewLevelTwo to provide new boss ui features  <br>
+6. Controller - Now handles win and lose screen <br>
+7. Main - improved code style <br>
+8. ActiveActor and ActivaActorDestructible have been deleted and replaced by gameObject for more effecient object creation and less complexity <br>
+9. ShieldImage, GameOverImage, WinImage have all been deleted and implemented differenly <br>
+10. Destructible interface deleted as made redundant from changes <br>
+11. module-info.java altered to incorporate necessary dependencies for javaFX and Junit tests <br>
 
 
 
