@@ -79,4 +79,10 @@ public class LevelViewBoss extends HeartBar {
 		healthBarBorder.toFront();
 		bossHealthText.toFront();
 	}
+	/**
+	 * Gets the boss health text.
+	 *
+	 * @return the boss health text
+	 */
+	public Text getBossHealthText(){return bossHealthText;}
 }

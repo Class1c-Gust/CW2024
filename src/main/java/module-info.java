@@ -4,6 +4,7 @@ module com.example.demo {
     requires transitive javafx.graphics;
     requires java.desktop;
     requires javafx.media;
+    requires static org.junit.jupiter.api;
 
 
     opens com.example.demo to javafx.fxml;

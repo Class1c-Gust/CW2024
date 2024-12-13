@@ -3,6 +3,8 @@ package com.example.demo.Levels;
 import com.example.demo.HeartDisplay;
 import com.example.demo.config.Config;
 import javafx.scene.Group;
+import javafx.scene.layout.HBox;
+import org.junit.jupiter.api.DynamicContainer;
 
 /**
  * Represents a heart bar in the game.
@@ -56,5 +58,13 @@ public class HeartBar {
 				heartDisplay.addHeart();
 			}
 		}
+	}
+	/**
+	 * Gets the Hbox heart display container.
+	 *
+	 * @return the getContainer() of the Hbox instance
+	 */
+	public HBox getContainer() {
+		return heartDisplay.getContainer();
 	}
 }

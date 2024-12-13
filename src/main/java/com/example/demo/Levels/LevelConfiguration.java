@@ -28,7 +28,7 @@ public class LevelConfiguration {
         this.totalEnemies = Config.Level.BASE_ENEMY_COUNT + levelNumber;
         this.killsToAdvance = Config.Level.BASE_KILLS_TO_ADVANCE + (levelNumber * 2);
         this.enemySpawnProbability = Config.Level.BASE_ENEMY_SPAWN_PROBABILITY + (levelNumber * 0.01);
-        this.advancedEnemyProbability = levelNumber * 0.0040;
+        this.advancedEnemyProbability = levelNumber * 0.0070;
         this.playerInitialHealth = Config.Player.DEFAULT_HEALTH;
         this.heartSpawnProbability = levelNumber * 0.0001;
         this.freezeSpawnProbability = levelNumber * 0.0003;

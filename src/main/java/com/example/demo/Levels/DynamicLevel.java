@@ -93,4 +93,12 @@ public class DynamicLevel extends LevelParent {
         // Create a heart bar with a default health value of 5
         return new HeartBar(getRoot(), Config.Player.DEFAULT_HEALTH);
     }
+
+    /**
+     * Getter function for current level config
+     * @return the level config
+     */
+    public LevelConfiguration getConfig(){
+        return config;
+    }
 }

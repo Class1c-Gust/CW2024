@@ -1,0 +1,12 @@
+module:com.example.demo
+com.example.demo
+com.example.demo.config
+com.example.demo.controller
+com.example.demo.Factories
+com.example.demo.Levels
+com.example.demo.Managers
+com.example.demo.Objects
+com.example.demo.Objects.Planes
+com.example.demo.Objects.Powerups
+com.example.demo.Objects.Projectiles
+com.example.demo.screens

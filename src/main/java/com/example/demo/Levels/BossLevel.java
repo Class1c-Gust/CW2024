@@ -101,4 +101,20 @@ public class BossLevel extends LevelParent {
 		// Update the health bar for the boss
 		levelView.updateBossHealth(boss.getHealth(), boss.getMaxHealth());
 	}
+
+	/**
+	 * Getter function for boss instance
+	 * @return the boss instance
+	 */
+	public Boss getBoss(){
+		return boss;
+	}
+
+	/**
+	 * Getter function for the boss levelview instance
+	 * @return the boss levelview instance
+	 */
+	public LevelViewBoss getLevelview(){
+		return levelView;
+	}
 }
