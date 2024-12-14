@@ -12,7 +12,9 @@ JavaFX: 19.0.2
 1. Setup javaFX
 2. Clone the project repository to your machine
 3. Import the project into your preferred IDE
-4. Compile and run 'Main"
+4. Ensure the SDK is set to Java 21 (Amazon Corretto 21.0.2)
+5. Ensure all required libraries are included within your classpath
+6. Compile and run 'Main"
 
 <h1>Implemented and working properly</h1>
 
@@ -78,22 +80,22 @@ Did not implement due to time constraint and overall complexity in implementing 
 Did not implement due to the added complexity of the mathematical elements needed for this to function
 
 <h1>Additional Java classes</h1>
-1. Config.java - To hold all static contants and configurations in one place <br>
-2. GameObjectFactory, BossFactory, EnemyPlaneFactory, LevelFactory, PlaneFactory, ProjectileFactory, UserPlaneFactory - To provide concrete game objecr products to create these game objects whilst applying the factory method design pattern <br> 
-3, LevelConfiguration - Provides parameters for enemy spawning player health, powerup probabilities <br>
-4. CollisonManager - Manage collisions in the game <br>
-5. SoundManager - Manage Sounds in the game <br>
-6. BossConfiguration - Provides parameters for the boss including shield and missile probability, health, fire rate etc <br>
-7. Freeze - Define freeze powerup <br>
-8. Heart - Define freeze Heart <br>
-9. Multishot - Define freeze Multishot <br>
-10. Powerup - Define Powerup superclass <br>
-11. BossMissile - Create a boss missile providing specific behaviour <br>
-12. GameObject - Provides basic functionality for handling movement, destruction, and bounding box retrieval. <br>
-13. GameLoseScreen - screen provides options to retry the game or return to the main menu after losing <br>
-14. GameWinScreen - screen provides options to retry the game or return to the main menu after winning <br>
-15. MainMenu - Represents the main menu screen of the game. This screen provides options to start the game or exit. <br>
-16. MenuScreen - Base class for screens, provides common functionality for managing screen layour, button styles etc <br>
+1. Config.java (com/example/demo/config/Config.java) - To hold all static contants and configurations in one place <br>
+2. GameObjectFactory, BossFactory, EnemyPlaneFactory, LevelFactory, PlaneFactory, ProjectileFactory, UserPlaneFactory (com/example/demo/Factories) - To provide concrete game objecr products to create these game objects whilst applying the factory method design pattern <br> 
+3, LevelConfiguration (com/example/demo/Factories/LevelFactory.java) - Provides parameters for enemy spawning player health, powerup probabilities <br>
+4. CollisonManager (com/example/demo/Managers/CollisionManager.java) - Manage collisions in the game <br>
+5. SoundManager (com/example/demo/Managers/SoundManager.java) - Manage Sounds in the game <br>
+6. BossConfiguration (com/example/demo/Objects/Planes/BossConfiguration.java) - Provides parameters for the boss including shield and missile probability, health, fire rate etc <br>
+7. Freeze (com/example/demo/Objects/Powerups/Freeze.java) - Define freeze powerup <br>
+8. Heart (com/example/demo/Objects/Powerups/Heart.java) - Define freeze Heart <br>
+9. Multishot (com/example/demo/Objects/Powerups/Multishot.java) - Define freeze Multishot <br>
+10. Powerup (com/example/demo/Objects/Powerups/Powerup.java) - Define Powerup superclass <br>
+11. BossMissile (com/example/demo/Objects/Projectiles/BossMissile.java) - Create a boss missile providing specific behaviour <br>
+12. GameObject (com/example/demo/Objects/GameObject.java) - Provides basic functionality for handling movement, destruction, and bounding box retrieval. <br>
+13. GameLoseScreen (com/example/demo/screens/GameLoseScreen.java) - screen provides options to retry the game or return to the main menu after losing <br>
+14. GameWinScreen (com/example/demo/screens/GameWinScreen.java) - screen provides options to retry the game or return to the main menu after winning <br>
+15. MainMenu (com/example/demo/screens/MainMenu.java) - Represents the main menu screen of the game. This screen provides options to start the game or exit. <br>
+16. MenuScreen (com/example/demo/screens/MenuScreen.java) - Base class for screens, provides common functionality for managing screen layour, button styles etc <br>
 
 <h1>Modified Java classes</h1>
 1. Heartbar - Changed from heartdisplay to display hearts and update <br>
